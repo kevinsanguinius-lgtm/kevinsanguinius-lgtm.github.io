@@ -1,0 +1,1562 @@
+<title>Listes Warhammer 40K</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Mise en page : une colonne étroite pensée pour le téléphone, en-tête de points collé en haut, navigation fixe en bas. */
+:root {
+  --bg: #e7ece9;
+  --surface: #f6f8f7;
+  --raised: #ffffff;
+  --ink: #111915;
+  --muted: #53635b;
+  --line: #c9d2ce;
+  --accent: #14764f;
+  --on-accent: #ffffff;
+  --accent-soft: #d6eadf;
+  --warn: #a8480a;
+  --warn-soft: #f6e3d2;
+  --bad: #b02a22;
+  --f-display: "Chakra Petch", "Trebuchet MS", sans-serif;
+  --f-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-num: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0c1311; --surface: #131c19; --raised: #19241f; --ink: #e2ebe6; --muted: #8da198; --line: #25332d;
+    --accent: #46d08a; --on-accent: #07160e; --accent-soft: #15332a; --warn: #e3a257; --warn-soft: #33261a; --bad: #f2796f;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0c1311; --surface: #131c19; --raised: #19241f; --ink: #e2ebe6; --muted: #8da198; --line: #25332d;
+  --accent: #46d08a; --on-accent: #07160e; --accent-soft: #15332a; --warn: #e3a257; --warn-soft: #33261a; --bad: #f2796f;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  background: var(--bg); color: var(--ink);
+  font: 15px/1.45 var(--f-body);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0 84px;
+}
+body.lock { overflow: hidden; }
+button, input, select { font: inherit; color: inherit; }
+button { cursor: pointer; }
+button:disabled { opacity: .35; cursor: default; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+h1, h2, h3, h4 { font-family: var(--f-display); margin: 0; line-height: 1.15; text-wrap: balance; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+
+#app { max-width: 640px; margin: 0 auto; }
+
+/* en-tête */
+.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); padding: 10px 0 8px; border-bottom: 1px solid var(--line); }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+.hrow { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.lname { background: none; border: 0; padding: 0; text-align: left; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+.brand { font: 600 11px/1 var(--f-display); letter-spacing: .14em; text-transform: uppercase; color: var(--accent); }
+.ln { font: 600 17px/1.2 var(--f-display); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 52vw; }
+.tot { display: flex; align-items: baseline; gap: 6px; font-family: var(--f-num); white-space: nowrap; }
+.tot b { font-size: 26px; font-weight: 600; letter-spacing: -.02em; }
+.tot span { color: var(--muted); font-size: 12px; }
+.tot.over b { color: var(--bad); }
+.bar { height: 5px; background: var(--line); margin: 8px 0 6px; border-radius: 3px; overflow: hidden; }
+.bar i { display: block; height: 100%; background: var(--accent); }
+.tot.over ~ .bar i, .over + .bar i { background: var(--bad); }
+.hsub { display: flex; justify-content: space-between; align-items: center; font: 500 12px/1 var(--f-num); color: var(--muted); }
+.wc { border: 1px solid var(--line); background: var(--surface); border-radius: 999px; padding: 5px 10px; font: 500 12px/1 var(--f-body); color: var(--muted); }
+.wc.has { background: var(--warn-soft); border-color: var(--warn); color: var(--warn); }
+
+/* contenu */
+.main { padding-top: 14px; display: flex; flex-direction: column; gap: 14px; }
+.ph { font-size: 22px; }
+.note { color: var(--muted); font-size: 13px; margin: 0; max-width: 60ch; }
+.meta { display: grid; grid-template-columns: 1fr auto; gap: 10px; }
+.meta label, .dyn { display: flex; flex-direction: column; gap: 4px; font-size: 12px; color: var(--muted); min-width: 0; }
+.meta .lim input { width: 104px; text-align: right; font-family: var(--f-num); font-weight: 600; }
+.meta input, .meta select, .dyn select, .search {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 9px 10px; min-height: 44px; color: var(--ink); width: 100%;
+}
+.boot { padding: 24px 0; display: flex; flex-direction: column; gap: 12px; max-width: 520px; margin: 0 auto; }
+.boot h1 { font-size: 22px; }
+.boot p { margin: 0; color: var(--muted); }
+.fg { margin: 14px 0 6px; font: 600 11px/1 var(--f-display); letter-spacing: .14em; text-transform: uppercase; color: var(--accent); }
+.dl { display: flex; flex-direction: column; gap: 6px; align-items: flex-start; margin-top: 14px; }
+.empty { background: var(--surface); border: 1px dashed var(--line); border-radius: 8px; padding: 18px; display: flex; flex-direction: column; gap: 6px; }
+.empty h2 { font-size: 18px; }
+.empty p { margin: 0; color: var(--muted); }
+
+.force { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 14px; display: flex; flex-direction: column; gap: 14px; }
+.fh { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+.fh h2 { font-size: 19px; }
+.fcp { font: 600 12px/1 var(--f-num); color: var(--accent); }
+.slot { display: flex; flex-direction: column; gap: 8px; }
+.sh { display: flex; justify-content: space-between; align-items: baseline; border-bottom: 1px solid var(--line); padding-bottom: 5px; }
+.sh h3 { font-size: 13px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.sc { font: 600 12px/1 var(--f-num); color: var(--muted); }
+.sc.bad { color: var(--warn); }
+
+.unit { background: var(--raised); border: 1px solid var(--line); border-radius: 6px; }
+.unit.open { border-color: var(--accent); }
+.uh { width: 100%; background: none; border: 0; padding: 12px; display: flex; justify-content: space-between; align-items: center; gap: 12px; text-align: left; min-height: 56px; }
+.un { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.unm { font: 600 16px/1.2 var(--f-display); }
+.uss { font-size: 12px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.up { font: 600 20px/1 var(--f-num); letter-spacing: -.02em; white-space: nowrap; }
+.up small { font-size: 11px; color: var(--muted); margin-left: 3px; font-weight: 500; }
+.ed { padding: 4px 12px 12px; border-top: 1px solid var(--line); display: flex; flex-direction: column; gap: 6px; }
+
+.grp { display: flex; flex-direction: column; gap: 4px; margin-top: 8px; }
+.gh { display: flex; justify-content: space-between; font: 600 11px/1 var(--f-display); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); padding: 2px 0; }
+.cnt { font-family: var(--f-num); }
+.cnt.ok { color: var(--accent); }
+.row { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 6px 8px; min-height: 44px; border-radius: 6px; width: 100%; }
+.opt { background: none; border: 0; text-align: left; }
+.row.sel { background: var(--accent-soft); }
+.lbl { display: flex; align-items: baseline; gap: 8px; min-width: 0; flex-wrap: wrap; }
+.nm { font-size: 14px; overflow-wrap: anywhere; }
+.cost { font: 500 12px/1 var(--f-num); color: var(--muted); white-space: nowrap; }
+.nest { margin-left: 12px; padding-left: 10px; border-left: 2px solid var(--line); display: flex; flex-direction: column; gap: 2px; }
+.nest .grp { margin-top: 4px; }
+.fixed { font: 500 12px/1 var(--f-num); color: var(--muted); white-space: nowrap; }
+.radio { width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--muted); flex: none; position: relative; }
+.radio.on { border-color: var(--accent); }
+.radio.on::after { content: ""; position: absolute; inset: 3px; border-radius: 50%; background: var(--accent); }
+.step { display: flex; align-items: center; gap: 4px; flex: none; }
+.sb { width: 40px; height: 40px; border-radius: 6px; border: 1px solid var(--line); background: var(--surface); font: 600 20px/1 var(--f-num); display: grid; place-items: center; padding: 0; }
+.sn { min-width: 32px; text-align: center; font: 600 16px/1 var(--f-num); }
+.tog { border: 1px solid var(--line); background: var(--surface); border-radius: 6px; padding: 0 12px; min-height: 40px; font-size: 13px; flex: none; }
+.tog.on { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+
+.link { background: none; border: 0; color: var(--accent); text-align: left; padding: 10px 0 4px; font-size: 13px; font-weight: 600; min-height: 40px; }
+.refs h4 { font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin: 10px 0 4px; }
+.tw { overflow-x: auto; border: 1px solid var(--line); border-radius: 6px; }
+table { border-collapse: collapse; width: 100%; font-size: 12px; font-family: var(--f-num); }
+th, td { padding: 5px 7px; text-align: center; white-space: nowrap; border-bottom: 1px solid var(--line); }
+th { color: var(--muted); font-weight: 500; background: var(--surface); }
+tr:last-child td { border-bottom: 0; }
+td.tn, th:first-child { text-align: left; font-family: var(--f-body); position: sticky; left: 0; background: var(--raised); }
+th:first-child { background: var(--surface); }
+.ab { margin: 4px 0; font-size: 13px; }
+.acts { display: flex; gap: 8px; margin-top: 8px; }
+
+.ghost { background: none; border: 1px solid var(--line); border-radius: 6px; padding: 0 12px; min-height: 40px; font-size: 13px; }
+.ghost.sm { min-height: 36px; padding: 0 10px; }
+.ghost.bad { color: var(--bad); }
+.add, .addf { width: 100%; min-height: 46px; border-radius: 6px; border: 1px dashed var(--accent); background: none; color: var(--accent); font-weight: 600; }
+.addf { background: var(--accent); color: var(--on-accent); border: 0; min-height: 50px; font: 600 15px/1 var(--f-display); letter-spacing: .02em; }
+.primary { width: 100%; min-height: 50px; border-radius: 6px; border: 0; background: var(--accent); color: var(--on-accent); font: 600 15px/1 var(--f-display); }
+
+.warn { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.warn li { background: var(--warn-soft); border-left: 3px solid var(--warn); border-radius: 4px; padding: 10px 12px; font-size: 14px; }
+.okmsg { margin: 0; background: var(--accent-soft); border-left: 3px solid var(--accent); border-radius: 4px; padding: 10px 12px; }
+.imp { width: 100%; min-height: 150px; resize: vertical; font: 12.5px/1.4 var(--f-num); margin-bottom: 10px; }
+.warn1 { color: var(--bad); margin: 0 0 10px; font-size: 13px; }
+.uhw { display: flex; align-items: stretch; }
+.uhw .uh { flex: 1; min-width: 0; }
+.eye { flex: 0 0 48px; background: none; border: 0; border-left: 1px solid var(--line); color: var(--accent); display: flex; align-items: center; justify-content: center; }
+.eq { margin: -2px 0 6px; padding: 0 2px 0 10px; display: flex; flex-direction: column; gap: 2px; }
+.wp { font-size: 11.5px; line-height: 1.35; color: var(--muted); overflow-wrap: anywhere; }
+.wp b { color: var(--fg); font-weight: 600; }
+.wp.ab2 { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.rm { color: var(--warn); font-style: italic; }
+.kw { font-size: 12px; color: var(--muted); margin: 0 0 6px; }
+.wcard { border: 1px solid var(--line); border-radius: 6px; padding: 8px 10px; margin: 6px 0; background: var(--raised); font-size: 13px; }
+.wcard .wl { font: 12.5px/1.4 var(--f-num); margin-top: 2px; }
+.wcard .wd { font-size: 12.5px; color: var(--muted); margin-top: 4px; }
+.fr { display: flex; flex-direction: column; gap: 4px; margin: 2px 0 8px; }
+.fri { background: none; border: 0; border-left: 2px solid var(--accent); padding: 2px 0 2px 8px; text-align: left; font-size: 11.5px; line-height: 1.35; color: var(--muted); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; width: 100%; }
+.fri.open { display: block; }
+.fri b { color: var(--fg); }
+.xp { display: flex; flex-direction: column; gap: 10px; background: var(--raised); border: 1px solid var(--line); border-radius: 10px; padding: 14px; margin: 0 0 22px; }
+.xp.xall { border: 2px solid var(--accent); }
+.xp .imp { margin-bottom: 0; }
+.xh { display: flex; align-items: center; gap: 10px; font: 600 15px/1.2 var(--f-display); letter-spacing: .03em; margin: 0; }
+.xn { width: 24px; height: 24px; border-radius: 50%; background: var(--accent); color: var(--bg); display: inline-flex; align-items: center; justify-content: center; font: 700 13px/1 var(--f-num); flex: 0 0 auto; }
+.xp .note { margin: 0; }
+.exp { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 12px; font: 12.5px/1.5 var(--f-num); white-space: pre-wrap; overflow-wrap: anywhere; margin: 0; user-select: text; }
+
+.nav { position: fixed; left: 0; right: 0; bottom: 0; z-index: 6; background: var(--surface); border-top: 1px solid var(--line); display: flex; justify-content: center; padding: 6px max(8px, env(safe-area-inset-right, 0px)) calc(6px + env(safe-area-inset-bottom, 0px)) max(8px, env(safe-area-inset-left, 0px)); gap: 3px; }
+.nb { flex: 1; max-width: 200px; min-height: 48px; background: none; border: 0; border-radius: 6px; font: 600 11px/1 var(--f-display); letter-spacing: .03em; text-transform: uppercase; color: var(--muted); min-width: 0; padding: 0 2px; }
+.nb.on { color: var(--accent); background: var(--accent-soft); }
+
+.scrim { position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 20; border: 0; }
+.sheet { position: fixed; left: 0; right: 0; bottom: 0; z-index: 21; background: var(--bg); border-radius: 12px 12px 0 0; max-height: 86%; display: flex; flex-direction: column; max-width: 640px; margin: 0 auto; border: 1px solid var(--line); border-bottom: 0; }
+.shh { display: flex; justify-content: space-between; align-items: center; padding: 12px max(16px, env(safe-area-inset-right, 0px)) 8px max(16px, env(safe-area-inset-left, 0px)); }
+.shh h2 { font-size: 18px; }
+.shb { overflow-y: auto; padding: 4px max(16px, env(safe-area-inset-right, 0px)) calc(16px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); display: flex; flex-direction: column; gap: 10px; }
+.shb > * { flex-shrink: 0; }
+.sheet.top { top: 0; bottom: auto; border-radius: 0 0 12px 12px; border: 1px solid var(--line); border-top: 0; padding-top: env(safe-area-inset-top, 0px); max-height: 70%; }
+.sheet.top .shb { padding-bottom: 16px; }
+.chips { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 2px; }
+.chip { flex: none; border: 1px solid var(--line); background: var(--surface); border-radius: 999px; padding: 0 14px; min-height: 38px; font-size: 13px; }
+.chip.on { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+.pick { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.pickrow { width: 100%; text-align: left; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 10px 12px; min-height: 52px; display: flex; flex-direction: column; gap: 3px; }
+.pn { display: flex; justify-content: space-between; gap: 10px; font: 600 15px/1.2 var(--f-display); }
+.pn em { font: 500 12px/1.4 var(--f-num); color: var(--accent); font-style: normal; white-space: nowrap; }
+.pd { font-size: 12px; color: var(--muted); }
+.pd.ok { color: var(--accent); }
+.pd.bad { color: var(--warn); }
+.fa { display: flex; gap: 6px; flex: none; }
+.lrow.cur .pickrow { border-color: var(--accent); }
+.lact { display: flex; gap: 6px; margin-top: 6px; }
+.toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(76px + env(safe-area-inset-bottom, 0px)); background: var(--ink); color: var(--bg); padding: 10px 14px; border-radius: 6px; font-size: 13px; z-index: 30; max-width: 90%; text-align: center; }
+@media (prefers-reduced-motion: no-preference) { .unit, .nb, .sb { transition: border-color .15s, background-color .15s; } }
+</style>
+<div id="app"></div>
+<script>/* Moteur de liste : arbre de sélections façon BattleScribe (comptes absolus par sélection). */
+const Engine = (function () {
+  'use strict';
+  const GROUP = 'group';
+  const TRANSPARENT = { group: 1, force: 1, roster: 1 };
+  let DATA = null;
+
+  function init(data) { DATA = data; return data; }
+
+  /* ---------- instances ---------- */
+  function mk(n, c, p) { return { n: n, c: c, k: [], p: p || null }; }
+  function isGroup(i) { return i.n.type === GROUP; }
+  function owner(i) { let x = i; while (x && x.n.type === GROUP) x = x.p; return x; }
+  function pcOf(parent) { const o = owner(parent); return o && o.c ? o.c : 1; }
+  /* min/max par parent, avec les modificateurs de contrainte (ex. 1 Heavy Destroyer par tranche de 3 Destroyers) */
+  function limits(def, parent) {
+    let mn = def.min || 0;
+    let mx = def.max;
+    if (def.mods) {
+      const tmp = { n: def, c: 0, k: [], p: parent };
+      for (const m of def.mods) {
+        if ((m.f !== 'min' && m.f !== 'max') || !condsOk(tmp, m.c)) continue;
+        const v = parseFloat(m.v);
+        const times = repeatTimes(tmp, m.r);
+        let cur = m.f === 'min' ? mn : (mx === undefined ? 0 : mx);
+        if (m.t === 'set') cur = v; else if (m.t === 'increment') cur += v * times; else cur -= v * times;
+        if (m.f === 'min') mn = cur; else mx = cur;
+      }
+    }
+    return { min: mn, max: mx };
+  }
+  function bounds(def, parent) {
+    const pc = pcOf(parent);
+    const L = limits(def, parent);
+    return { lo: L.min * pc, hi: L.max === undefined ? Infinity : L.max * pc };
+  }
+  function selKids(i, out) {
+    out = out || [];
+    for (const k of i.k) { if (TRANSPARENT[k.n.type]) selKids(k, out); else out.push(k); }
+    return out;
+  }
+  function sum(list) { let t = 0; for (const x of list) t += x.c; return t; }
+
+  /* ---------- conditions et modificateurs ---------- */
+  function matches(def, child) {
+    if (child === 'any') return true;
+    if (child === 'model' || child === 'unit' || child === 'upgrade') return def.type === child;
+    return def.id === child || def.link === child;
+  }
+  function countSel(target, child, rec) {
+    if (!target) return 0;
+    let t = 0;
+    for (const k of selKids(target)) {
+      if (matches(k.n, child)) t += k.c;
+      if (rec) t += countSel(k, child, true);
+    }
+    return t;
+  }
+  function scopeTarget(ctx, s) {
+    if (s === 'parent' || s === 'ancestor') return ctx.p;
+    if (s === 'roster') { let x = ctx; while (x.p) x = x.p; return x; }
+    if (s === 'force') { let x = ctx; while (x && x.n.type !== 'force') x = x.p; return x; }
+    let x = ctx;
+    while (x) {
+      if (s === 'unit' || s === 'model' || s === 'upgrade') { if (x.n.type === s) return x; }
+      else if (x.n.id === s || x.n.link === s) return x;
+      x = x.p;
+    }
+    return null;
+  }
+  function inAncestors(ctx, child) {
+    let x = ctx;
+    while (x) { if (matches(x.n, child)) return true; x = x.p; }
+    return false;
+  }
+  function leaf(ctx, c) {
+    if (c.ty === 'instanceOf') return inAncestors(ctx, c.c);
+    if (c.ty === 'notInstanceOf') return !inAncestors(ctx, c.c);
+    if (c.f !== 'selections') return false;
+    const wide = c.s === 'roster' || c.s === 'force' || c.i;
+    const n = countSel(scopeTarget(ctx, c.s), c.c, wide);
+    switch (c.ty) {
+      case 'atLeast': return n >= c.v;
+      case 'atMost': return n <= c.v;
+      case 'greaterThan': return n > c.v;
+      case 'lessThan': return n < c.v;
+      case 'equalTo': return n === c.v;
+      case 'notEqualTo': return n !== c.v;
+    }
+    return false;
+  }
+  function cond(ctx, c) {
+    if (c.g) { const f = (x) => cond(ctx, x); return c.g === 'or' ? c.p.some(f) : c.p.every(f); }
+    return leaf(ctx, c);
+  }
+  function condsOk(ctx, list) { return !list || list.every((c) => cond(ctx, c)); }
+  function repeatTimes(ctx, reps) {
+    if (!reps) return 1;
+    let t = 0;
+    for (const r of reps) {
+      const wide = r.s === 'roster' || r.s === 'force' || r.i;
+      const n = countSel(scopeTarget(ctx, r.s), r.c, wide);
+      t += Math.floor(n / (r.v || 1)) * r.n;
+    }
+    return t;
+  }
+  /* valeur effective d'une sélection (par unité de compte) pour 'pts' ou 'cp' */
+  function value(inst, field) {
+    let v = (inst.n.cost && inst.n.cost[field]) || 0;
+    for (const m of inst.n.mods || []) {
+      if (m.f !== field || !condsOk(inst, m.c)) continue;
+      const val = parseFloat(m.v);
+      const times = repeatTimes(inst, m.r);
+      if (m.t === 'set') v = val;
+      else if (m.t === 'increment') v += val * times;
+      else if (m.t === 'decrement') v -= val * times;
+    }
+    return v;
+  }
+  function total(inst, field) {
+    field = field || 'pts';
+    let t = TRANSPARENT[inst.n.type] ? 0 : value(inst, field) * inst.c;
+    for (const k of inst.k) t += total(k, field);
+    return t;
+  }
+  function isHidden(def, parent) {
+    let h = !!def.hidden;
+    if (!def.mods) return h;
+    const tmp = { n: def, c: 0, k: [], p: parent };
+    for (const m of def.mods) {
+      if (m.f === 'hidden' && condsOk(tmp, m.c)) h = (m.v === 'true' || m.v === true || m.v === '1');
+    }
+    return h;
+  }
+  function displayName(inst) {
+    for (const m of inst.n.mods || []) {
+      if (m.f === 'name' && condsOk(inst, m.c)) return m.v;
+    }
+    return inst.n.name;
+  }
+
+  /* ---------- construction ---------- */
+  function pickDefault(g) {
+    const opts = g.kids.filter((k) => k.type !== GROUP && !k.hidden);
+    return opts.find((k) => k.id === g.default || k.link === g.default) || opts[0] || null;
+  }
+  function addOption(parent, def, count) {
+    const inst = mk(def, count, parent);
+    parent.k.push(inst);
+    build(inst);
+    return inst;
+  }
+  function build(inst) {
+    const def = inst.n;
+    const inGroup = def.type === GROUP;
+    const pc = inGroup ? pcOf(inst.p) : inst.c;
+    let got = 0;
+    for (const kd of def.kids || []) {
+      if (kd.type === GROUP) {
+        const g = mk(kd, 1, inst);
+        inst.k.push(g);
+        build(g);
+      } else {
+        const lo = limits(kd, inst).min * pc;
+        if (lo > 0) { addOption(inst, kd, lo); got += lo; }
+      }
+    }
+    if (inGroup) {
+      const lo = limits(def, inst.p).min * pc;
+      if (got < lo) {
+        const dk = pickDefault(def);
+        if (dk) {
+          const have = inst.k.find((x) => x.n === dk);
+          if (have) adjust(have, have.c + (lo - got)); else addOption(inst, dk, lo - got);
+        }
+      }
+    }
+  }
+  function newUnit(def, parent) {
+    const inst = mk(def, 1, parent);
+    build(inst);
+    return inst;
+  }
+
+  /* ---------- changement de compte ---------- */
+  function adjust(inst, newC) {
+    const old = inst.c;
+    if (newC === old) return;
+    inst.c = newC;
+    rescale(inst, old);
+  }
+  function rescale(inst, old) {
+    const nc = inst.c;
+    for (const k of inst.k) {
+      if (isGroup(k)) { rescaleGroup(k, nc); continue; }
+      const kmin = limits(k.n, inst).min;
+      if (kmin > 0 && k.c === kmin * old) adjust(k, kmin * nc);
+      else {
+        const b = bounds(k.n, inst);
+        if (k.c > b.hi) adjust(k, b.hi);
+      }
+    }
+  }
+  function rescaleGroup(g, nc) {
+    for (const x of g.k) if (isGroup(x)) rescaleGroup(x, nc);
+    const opts = g.k.filter((x) => !isGroup(x));
+    const t = sum(opts);
+    const L = limits(g.n, g.p);
+    const lo = L.min * nc;
+    const hi = L.max === undefined ? Infinity : L.max * nc;
+    if (t < lo) pushTo(g, lo - t, null);
+    else if (t > hi) pullFrom(g, t - hi, null);
+  }
+  function pushTo(g, n, except) {
+    const opts = g.k.filter((x) => !isGroup(x) && x !== except);
+    let target = opts.slice().sort((a, b) => b.c - a.c)[0];
+    if (!target || target.c === 0) {
+      const dk = pickDefault(g.n);
+      target = (dk && g.k.find((x) => x.n === dk)) || null;
+      if (!target) {
+        if (!dk) return;
+        addOption(g, dk, n);
+        return;
+      }
+    }
+    adjust(target, target.c + n);
+  }
+  function pullFrom(g, n, except) {
+    const opts = g.k.filter((x) => !isGroup(x) && x !== except).sort((a, b) => b.c - a.c);
+    for (const o of opts) {
+      if (n <= 0) break;
+      const r = Math.min(o.c, n);
+      adjust(o, o.c - r);
+      n -= r;
+      if (o.c === 0) g.k = g.k.filter((x) => x !== o);
+    }
+  }
+  /* action de l'utilisateur : fixe le nombre de `def` sous `parent` (sélection ou groupe) */
+  function setCount(parent, def, desired) {
+    const b = bounds(def, parent);
+    desired = Math.max(0, Math.min(desired, b.hi));
+    let inst = parent.k.find((x) => x.n === def);
+    const cur = inst ? inst.c : 0;
+    if (desired === cur) return;
+    if (!inst) { inst = addOption(parent, def, desired); }
+    else if (desired === 0) { parent.k = parent.k.filter((x) => x !== inst); }
+    else adjust(inst, desired);
+    if (isGroup(parent)) {
+      const pc = pcOf(parent.p);
+      const opts = parent.k.filter((x) => !isGroup(x));
+      const t = sum(opts);
+      const GL = limits(parent.n, parent.p);
+      const lo = GL.min * pc;
+      const hi = GL.max === undefined ? Infinity : GL.max * pc;
+      if (t > hi) pullFrom(parent, t - hi, inst);
+      else if (t < lo) pushTo(parent, lo - t, desired === 0 ? inst : null);
+    }
+  }
+  function setParents(inst, parent) {
+    inst.p = parent || null;
+    for (const k of inst.k) setParents(k, inst);
+  }
+
+  /* ---------- sérialisation ---------- */
+  function ser(inst) {
+    const idx = (inst.p && inst.p.n.kids) ? inst.p.n.kids.indexOf(inst.n) : 0;
+    return { i: idx, id: inst.n.link || inst.n.id, c: inst.c, k: inst.k.map(ser) };
+  }
+  function de(def, o, parent) {
+    const inst = mk(def, o.c, parent);
+    for (const s of o.k) {
+      let kd = null;
+      if (def.kids) {
+        if (s.id) { // format récent : on retrouve l'option par son identifiant (survit à une mise à jour des données)
+          const at = def.kids[s.i];
+          kd = (at && (at.link || at.id) === s.id) ? at : def.kids.find((x) => (x.link || x.id) === s.id);
+        } else kd = def.kids[s.i]; // ancien format : par position
+      }
+      if (kd) inst.k.push(de(kd, s, inst));
+    }
+    return inst;
+  }
+
+  /* ---------- validation ---------- */
+  function checkInst(inst, label, out) {
+    const def = inst.n;
+    const pc = isGroup(inst) ? pcOf(inst.p) : inst.c;
+    const direct = inst.k;
+    if (isGroup(inst)) {
+      const opts = direct.filter((x) => !isGroup(x));
+      const t = sum(opts);
+      const CL = limits(def, inst.p);
+      const lo = CL.min * pc;
+      const hi = CL.max === undefined ? Infinity : CL.max * pc;
+      const hid = def.hidden || isHidden(def, inst.p);
+      if (!hid) {
+        if (t < lo) out.push(label + ' : choisir ' + def.name + ' (' + t + '/' + lo + ')');
+        if (t > hi) out.push(label + ' : trop de choix pour ' + def.name + ' (' + t + '/' + hi + ')');
+      }
+    } else {
+      for (const kd of def.kids || []) {
+        if (kd.type === GROUP) continue;
+        const b = bounds(kd, inst);
+        const t = sum(direct.filter((x) => x.n === kd));
+        if (b.lo > 0 && t < b.lo && !isHidden(kd, inst)) out.push(label + ' : ' + kd.name + ' minimum ' + b.lo);
+        if (t > b.hi) out.push(label + ' : ' + kd.name + ' maximum ' + b.hi);
+      }
+    }
+    for (const k of inst.k) checkInst(k, label, out);
+  }
+  function allUnits(roster) {
+    const u = [];
+    for (const f of roster.forces) for (const x of f.units) u.push(x);
+    return u;
+  }
+  function walk(inst, fn) { fn(inst); for (const k of inst.k) walk(k, fn); }
+
+  /* prix affiché d'une ligne d'option : la figurine (ou l'amélioration) avec tout ce qui l'accompagne,
+     c'est-à-dire l'équipement imposé et le choix par défaut des groupes. Sélectionnée : prix réel par pièce. */
+  function rowPrice(def, parent, inst) {
+    if (inst && inst.c > 0) return total(inst, 'pts') / inst.c;
+    const tmp = mk(def, 1, parent);
+    build(tmp);
+    return total(tmp, 'pts');
+  }
+  const SLOT_FR = { 'HQ': 'QG', 'Troops': 'Troupes', 'Elites': 'Élites', 'Fast Attack': 'Attaque rapide', 'Heavy Support': 'Soutien lourd', 'Flyer': 'Volants', 'Dedicated Transport': 'Transports assignés', 'Lord of War': 'Seigneurs de guerre', 'Fortification': 'Fortifications' };
+  /* écarts entre une liste d'unités et un détachement (utilisé aussi pour tester un autre détachement) */
+  function slotIssues(units, dd) {
+    const out = [];
+    const cnt = {};
+    for (const u of units) cnt[u.n.slot] = (cnt[u.n.slot] || 0) + 1;
+    for (const slot of Object.keys(dd.slots)) {
+      if (slot === 'Dedicated Transport') continue;
+      const mm = dd.slots[slot];
+      const n = cnt[slot] || 0;
+      if (n < mm[0]) out.push(dd.name + ' : au moins ' + mm[0] + ' × ' + SLOT_FR[slot] + ' (' + n + ')');
+      if (mm[1] !== null && n > mm[1]) out.push(dd.name + ' : au plus ' + mm[1] + ' × ' + SLOT_FR[slot] + ' (' + n + ')');
+    }
+    for (const slot of Object.keys(cnt)) {
+      if (!dd.slots[slot]) out.push(dd.name + ' : pas d\'emplacement ' + SLOT_FR[slot] + ' (' + cnt[slot] + ' unité' + (cnt[slot] > 1 ? 's' : '') + ')');
+    }
+    return out;
+  }
+  function validate(roster, limit) {
+    const out = [];
+    const units = allUnits(roster);
+    const pts = totalPoints(roster);
+    if (limit && pts > limit) out.push('Limite dépassée de ' + (pts - limit) + ' pts');
+    for (const f of roster.forces) for (const m of slotIssues(f.units, f.det)) out.push(m);
+    for (const u of units) checkInst(u, displayName(u), out);
+    // limites de liste (personnages nommés, etc.)
+    const seen = {};
+    for (const u of units) walk(u, (i) => {
+      for (const l of i.n.lim || []) {
+        if (l.s === 'roster' && l.ty === 'max') {
+          const key = i.n.id;
+          seen[key] = seen[key] || { n: 0, v: l.v, name: i.n.name };
+          seen[key].n += i.c;
+        }
+      }
+    });
+    for (const k of Object.keys(seen)) {
+      if (seen[k].n > seen[k].v) out.push(seen[k].name + ' : limité à ' + seen[k].v + ' par armée');
+    }
+    if (units.length) {
+      let w = 0;
+      for (const u of units) walk(u, (i) => { if (i.n.name === 'Warlord' && i.n.type === 'upgrade') w += i.c; });
+      if (w === 0) out.push('Aucun Seigneur de guerre désigné');
+      if (w > 1) out.push('Plusieurs Seigneurs de guerre désignés (' + w + ')');
+    }
+    return out;
+  }
+  function totalPoints(roster) {
+    let t = 0;
+    for (const f of roster.forces) for (const u of f.units) t += total(u, 'pts');
+    return t;
+  }
+  function totalCP(roster) {
+    let t = 0;
+    for (const f of roster.forces) {
+      t += f.det.cp;
+      if (f.dyn) t += total(f.dyn, 'cp');
+      for (const u of f.units) t += total(u, 'cp');
+    }
+    return t;
+  }
+
+  /* ---------- profils et description ---------- */
+  function collect(inst) {
+    const prof = { units: [], weapons: [], abilities: [], other: [] };
+    const seen = {};
+    function add(list, p) { const k = p.type + '|' + p.name + '|' + JSON.stringify(p.chars); if (!seen[k]) { seen[k] = 1; list.push(p); } }
+    walk(inst, (i) => {
+      if (i.c <= 0) return;
+      for (const p of i.n.profiles || []) {
+        if (p.type === 'Unit') add(prof.units, p);
+        else if (p.type === 'Weapon') add(prof.weapons, p);
+        else if (p.type === 'Abilities') add(prof.abilities, p);
+        else add(prof.other, p);
+      }
+      for (const r of i.n.rules || []) add(prof.abilities, { type: 'Rule', name: r.name, chars: [['Description', r.text]] });
+    });
+    return prof;
+  }
+  function describe(inst) {
+    const parts = [];
+    const agg = {};
+    walk(inst, (i) => {
+      if (i === inst || TRANSPARENT[i.n.type] || i.c <= 0) return;
+      const name = displayName(i);
+      // un « conteneur » d'arme (ex. Two Gauss Blasters) est remplacé par son contenu
+      const wrapper = !(i.n.profiles && i.n.profiles.length) && i.k.some((x) => !TRANSPARENT[x.n.type] && x.c > 0 && x.n.type === 'upgrade');
+      if (wrapper) return;
+      // équipement imposé et gratuit (ex. Gauss Flayer des Guerriers) : pas un choix, on ne le liste pas
+      if (i.n.type === 'upgrade' && (i.n.min || 0) > 0 && i.n.min === i.n.max && !(i.n.cost && i.n.cost.pts) && !(i.n.mods && i.n.mods.some((m) => m.f === 'pts'))) return;
+      if (i.n.type === 'model' || i.n.type === 'upgrade') {
+        // on ne liste pas les marqueurs sans valeur de choix
+        agg[name] = (agg[name] || 0) + i.c;
+      }
+    });
+    for (const k of Object.keys(agg)) parts.push(agg[k] > 1 ? agg[k] + '× ' + k : k);
+    return parts;
+  }
+
+  return {
+    init, newUnit, mk, build, adjust, setCount, setParents, ser, de,
+    selKids, bounds, limits, pcOf, isGroup, isHidden, value, total, totalPoints, totalCP,
+    rowPrice, validate, slotIssues, SLOT_FR, collect, describe, displayName, pickDefault, sum, GROUP, TRANSPARENT,
+  };
+})();
+
+</script>
+<script>(function () {
+  'use strict';
+  let DATA = null;       // données de la faction chargée
+  let FACTION = null;    // { id, name, group, ... } (entrée de l'index)
+  let INDEX = { factions: [] };
+
+  const SLOT_ORDER = ['HQ', 'Troops', 'Elites', 'Fast Attack', 'Heavy Support', 'Flyer', 'Dedicated Transport', 'Lord of War', 'Fortification'];
+  const SLOT_FR = { 'HQ': 'QG', 'Troops': 'Troupes', 'Elites': 'Élites', 'Fast Attack': 'Attaque rapide', 'Heavy Support': 'Soutien lourd', 'Flyer': 'Volants', 'Dedicated Transport': 'Transports assignés', 'Lord of War': 'Seigneurs de guerre', 'Fortification': 'Fortifications' };
+  const MAIN_DETS = ['Patrol Detachment', 'Battalion Detachment', 'Brigade Detachment', 'Vanguard Detachment', 'Spearhead Detachment', 'Outrider Detachment', 'Supreme Command Detachment', 'Super-Heavy Detachment', 'Air Wing Detachment', 'Super-Heavy Auxiliary Detachment', 'Fortification Network', 'Auxiliary Support Detachment', 'Unbound Army (Faction)'];
+  const SEL_FR = { 'Dynastic Code': 'Dynastie', 'Legion': 'Légion', 'Chaos Allegiance': 'Allégeance', 'Craftworld Attribute': 'Craftworld', 'Clan Kultur': 'Clan', "T'au Empire Sept Choice": 'Sept', 'Hive Fleet': 'Flotte-ruche', 'Forge World Choice': 'Monde-forge', 'Household Choice': 'Maison', 'Chapter Selection': 'Chapitre', 'CHAPTER': 'Chapitre', 'Regimental Doctrine': 'Régiment', 'Order Convictions': 'Ordre', 'Cult Creed': 'Culte', 'Masque Form': 'Masque', 'Cults of the Legion': 'Culte' };
+  let DETS = [];
+  let DYN_DEF = null;
+  let DYN_GROUP = null;
+  let DYN_LABEL = '';
+  const STORE = 'listes-wh40k-v1';
+  const OLD_STORES = ['listes-necrons-v3'];
+  const OLD_PREFIX = 'listes-necrons-v2-r';
+  const DATA_URL = 'data/';
+
+  let uidc = 0;
+  let eqCache = new Map();
+  const RMT = '[text removed]';
+  let lists = [];   // entrées : { fid, name, limit, pts, ser (liste sérialisée), live (liste dépliée, seulement pour la faction chargée) }
+  let cur = 0;
+  let ready = false;
+  const ui = { fr: {}, imp: '', impErr: '', busy: 'Chargement…', err: null, fsearch: '', dl: '', tab: 'list', open: {}, ref: {}, sheet: null, search: '', chip: 'all', confirm: null, toast: '' };
+
+  /* ---------- modèle ---------- */
+  function newRoster(name) {
+    const r = { name: name, limit: 1000, forces: [] };
+    r.node = { n: { type: 'roster', id: 'roster' }, c: 1, k: [], p: null };
+    return r;
+  }
+  function newForce(r, det) {
+    const f = { n: { type: 'force', id: 'force' }, c: 1, k: [], p: r.node, det: det, units: [], dyn: null };
+    r.node.k.push(f);
+    r.forces.push(f);
+    return f;
+  }
+  function sync(f) { f.k = f.units.concat(f.dyn ? [f.dyn] : []); }
+  function findGroupDef(def) {  // premier groupe d'options (au moins 2 choix), en profondeur
+    for (const k of def.kids || []) {
+      if (k.type !== 'group') continue;
+      if (k.kids.filter((x) => x.type !== 'group').length >= 2) return k;
+      const r = findGroupDef(k);
+      if (r) return r;
+    }
+    return null;
+  }
+  function findInst(inst, def) {
+    for (const x of inst.k) {
+      if (x.n === def) return x;
+      const r = findInst(x, def);
+      if (r) return r;
+    }
+    return null;
+  }
+  function dynGroup(f) { return f.dyn && DYN_GROUP ? findInst(f.dyn, DYN_GROUP) : null; }
+  function dynOptions(f) {  // choix réellement proposés (certains catalogues masquent ces entrées par modificateur)
+    const g = f ? dynGroup(f) : null;
+    if (!g) return [];
+    return DYN_GROUP.kids.filter((k) => k.type !== 'group' && !/custom|^show |^\*/i.test(k.name) && !Engine.isHidden(k, g));
+  }
+  function dynClean(n) { return n.replace(/^[^:]{2,22}: /, ''); }
+  function defaultDyn(f) {
+    const opts = dynOptions(f);
+    const fn = (FACTION ? FACTION.name : '').toLowerCase();
+    const hit = opts.find((o) => { const c = dynClean(o.name).toLowerCase(); return c.length > 3 && (fn.indexOf(c) >= 0 || c.indexOf(fn) >= 0); }) ||
+      opts.find((o) => /sautekh/i.test(o.name)) || opts[0];
+    return hit ? hit.name : '';
+  }
+  function setDyn(f, name) {
+    const g = dynGroup(f);
+    if (!g) return;
+    const def = g.n.kids.find((k) => k.name === name);
+    if (def) Engine.setCount(g, def, 1);
+  }
+  function currentDyn(f) {
+    const g = dynGroup(f);
+    const o = g && g.k.find((x) => !Engine.isGroup(x) && x.c > 0);
+    return o ? o.n.name : '';
+  }
+  function addForce(r, det) {
+    const f = newForce(r, det);
+    if (DYN_DEF && DYN_GROUP) { f.dyn = Engine.newUnit(DYN_DEF, f); setDyn(f, defaultDyn(f)); }
+    sync(f);
+    return f;
+  }
+  function addUnit(f, def) {
+    const u = Engine.newUnit(def, f);
+    u.uid = ++uidc;
+    f.units.push(u);
+    sync(f);
+    return u;
+  }
+  function R() { return lists[cur].live; }
+
+  /* ---------- sauvegarde ---------- */
+  function serRoster(r) {
+    return {
+      name: r.name, limit: r.limit,
+      forces: r.forces.map((f) => ({
+        d: f.det.id,
+        dyn: f.dyn ? Engine.ser(f.dyn) : null,
+        units: f.units.map((u) => ({ u: u.n.id, t: Engine.ser(u) })),
+      })),
+    };
+  }
+  function deRoster(o) {
+    const r = newRoster(o.name);
+    r.limit = typeof o.limit === 'number' ? o.limit : 1000;
+    for (const fo of o.forces) {
+      const det = DATA.detachments.find((q) => q.id === fo.d);
+      if (!det) continue;
+      const f = newForce(r, det);
+      if (fo.dyn && DYN_DEF) f.dyn = Engine.de(DYN_DEF, fo.dyn, f);
+      for (const x of fo.units) {
+        const def = DATA.units.find((q) => q.id === x.u);
+        if (!def) continue;
+        const u = Engine.de(def, x.t, f);
+        u.uid = ++uidc;
+        f.units.push(u);
+      }
+      sync(f);
+    }
+    return r;
+  }
+  function uniqueName(name, except) {
+    const base = String(name || '').trim() || 'Liste';
+    const taken = (n) => lists.some((e, i) => i !== except && entryInfo(e).name.trim().toLowerCase() === n.toLowerCase());
+    if (!taken(base)) return base;
+    let n = 2;
+    while (taken(base + ' (' + n + ')')) n++;
+    return base + ' (' + n + ')';
+  }
+  function toast(msg) {
+    ui.toast = msg;
+    setTimeout(() => { ui.toast = ''; render(); }, 2200);
+  }
+  /* code de partage : la liste complète, collée à la fin du texte exporté */
+  const CODE = 'WH40K1:';
+  function b64enc(str) { return btoa(unescape(encodeURIComponent(str))); }
+  function b64dec(str) { return decodeURIComponent(escape(atob(str))); }
+  function payloadOf(e) {  // une liste enregistrée -> contenu du code (sans avoir besoin des données de sa faction)
+    const inf = entryInfo(e);
+    return { v: 1, fid: e.fid, name: inf.name, limit: inf.limit, pts: inf.pts, forces: (e.ser && e.ser.forces) || [] };
+  }
+  function shareCode(r) {
+    const o = serRoster(r);
+    return CODE + b64enc(JSON.stringify({ v: 1, fid: FACTION.id, name: r.name, limit: r.limit, pts: Engine.totalPoints(r), forces: o.forces })) + '.';
+  }
+  function backupText() {
+    save();
+    const d = new Date();
+    const L = ['SAUVEGARDE · Listes Warhammer 40,000 · ' + lists.length + ' liste' + (lists.length > 1 ? 's' : '') + ' · ' + d.toLocaleDateString('fr-FR'), ''];
+    for (const e of lists) {
+      const inf = entryInfo(e);
+      L.push('== ' + inf.name + ' · ' + fname(e.fid) + ' · ' + num(inf.pts) + ' / ' + inf.limit + ' pts ==');
+      L.push(CODE + b64enc(JSON.stringify(payloadOf(e))) + '.');
+      L.push('');
+    }
+    L.push('(à coller dans l\'onglet Import pour tout récupérer)');
+    return L.join('\n');
+  }
+  function parseCodes(text) {
+    const flat = String(text).replace(/\s+/g, '');
+    const re = /WH40K1:([A-Za-z0-9+\/=]+)\.?/g;
+    const items = [];
+    let bad = 0, m;
+    while ((m = re.exec(flat))) {
+      try {
+        const p = JSON.parse(b64dec(m[1]));
+        if (p && p.v === 1 && Array.isArray(p.forces) && factionEntry(p.fid)) items.push(p); else bad++;
+      } catch (e) { bad++; }
+    }
+    if (!items.length) {
+      return { err: bad ? 'Le code est incomplet, abîmé, ou d\'une faction inconnue de cette version. Recopiez le texte en entier, jusqu\'à la fin.' : 'Aucun code d\'import trouvé. Collez le texte complet envoyé par l\'appli (les lignes WH40K1:…).' };
+    }
+    return { items: items, bad: bad };
+  }
+  function importList(text) {
+    const res = parseCodes(text);
+    if (res.err) { ui.impErr = res.err; return; }
+    save();
+    const first = lists.length;
+    for (const p of res.items) {
+      lists.push({ fid: p.fid, name: uniqueName(p.name || 'Liste importée'), limit: typeof p.limit === 'number' ? p.limit : 1000, pts: p.pts || 0, ser: { name: p.name, limit: p.limit, forces: p.forces }, live: null });
+    }
+    ui.imp = ''; ui.impErr = '';
+    save();
+    const n = res.items.length;
+    const msg = n === 1 ? 'Liste « ' + lists[first].name + ' » importée' : n + ' listes importées' + (res.bad ? ' (' + res.bad + ' illisible' + (res.bad > 1 ? 's' : '') + ')' : '');
+    if (ui.sheet) { ui.sheet = null; ui.tab = 'list'; go(first); } else { ui.tab = 'lists'; }
+    toast(msg);
+  }
+  function entryInfo(e) {
+    return e.live ? { name: e.live.name, limit: e.live.limit, pts: Engine.totalPoints(e.live) } : { name: e.name, limit: e.limit, pts: e.pts };
+  }
+  function save() {
+    if (!ready) return;
+    const c = lists[cur];
+    if (c && c.live) { c.ser = serRoster(c.live); c.name = c.live.name; c.limit = c.live.limit; c.pts = Engine.totalPoints(c.live); }
+    try {
+      localStorage.setItem(STORE, JSON.stringify({ cur: cur, lists: lists.map((e) => Object.assign({}, e.ser || {}, { fid: e.fid, name: e.name, limit: e.limit, pts: e.pts })) }));
+    } catch (e) { /* stockage indisponible */ }
+  }
+  function load() {
+    let o = null;
+    try {
+      const raw = localStorage.getItem(STORE);
+      if (raw) o = JSON.parse(raw);
+      else {
+        let old = null;
+        for (const k of OLD_STORES) old = old || localStorage.getItem(k);
+        for (let i = 0; !old && i < localStorage.length; i++) { const k = localStorage.key(i); if (k && k.indexOf(OLD_PREFIX) === 0) old = localStorage.getItem(k); }
+        if (old) { const p = JSON.parse(old); o = { cur: p.cur, lists: p.lists.map((l) => Object.assign({ fid: 'necrons' }, l)) }; }
+      }
+    } catch (e) { o = null; }
+    lists = o && o.lists ? o.lists.filter((l) => l && l.fid).map((l) => ({ fid: l.fid, name: l.name || 'Liste', limit: typeof l.limit === 'number' ? l.limit : 1000, pts: l.pts || 0, ser: l, live: null })) : [];
+    cur = Math.min((o && o.cur) || 0, Math.max(lists.length - 1, 0));
+    ready = true;
+  }
+
+  /* ---------- données par faction (chargées à la demande, gardées hors ligne) ---------- */
+  function idb() {
+    return new Promise((ok, ko) => {
+      try {
+        const r = indexedDB.open('wh40k-data', 1);
+        r.onupgradeneeded = () => r.result.createObjectStore('f');
+        r.onsuccess = () => ok(r.result);
+        r.onerror = () => ko(r.error);
+      } catch (e) { ko(e); }
+    });
+  }
+  function idbGet(k) {
+    return idb().then((db) => new Promise((ok, ko) => { const q = db.transaction('f').objectStore('f').get(k); q.onsuccess = () => ok(q.result); q.onerror = () => ko(q.error); })).catch(() => undefined);
+  }
+  function idbPut(k, v) {
+    return idb().then((db) => new Promise((ok, ko) => { const q = db.transaction('f', 'readwrite').objectStore('f').put(v, k); q.onsuccess = () => ok(); q.onerror = () => ko(q.error); })).catch(() => undefined);
+  }
+  function fetchText(url) {
+    if (typeof location !== 'undefined' && location.protocol === 'file:') {
+      // ouverture directe du fichier index.html : les données sont des petits scripts data/<nom>.js
+      const name = url.replace(/^.*\//, '').replace(/\.json$/, '');
+      window.__TXT = window.__TXT || {};
+      return new Promise((ok, ko) => {
+        const sc = document.createElement('script');
+        sc.src = DATA_URL + name + '.js';
+        sc.onload = () => (window.__TXT[name] !== undefined ? ok(window.__TXT[name]) : ko(new Error('données absentes : ' + name)));
+        sc.onerror = () => ko(new Error('fichier introuvable : data/' + name + '.js'));
+        document.head.appendChild(sc);
+      });
+    }
+    return fetch(url).then((r) => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.text(); });
+  }
+  function loadIndex() {
+    return fetchText(DATA_URL + 'index.json').then((t) => { idbPut('index', t); return t; })
+      .catch((e) => idbGet('index').then((t) => { if (!t) throw e; return t; }))
+      .then((t) => { INDEX = JSON.parse(t); });
+  }
+  /* corrections de textes faites à la main : data/textes.js  ->  window.__OVR = { "Type|Nom|Champ": "texte", "Rule|Nom": "texte" } */
+  let OVR = {};
+  function loadOverrides() {
+    return new Promise((ok) => {
+      let done = false;
+      const fin = () => { if (!done) { done = true; ok(); } };
+      const fromCache = () => idbGet('textes').then((t) => { try { OVR = t ? JSON.parse(t) : {}; } catch (e) { OVR = {}; } fin(); });
+      try {
+        const sc = document.createElement('script');
+        sc.src = DATA_URL + 'textes.js';
+        sc.onload = () => { try { OVR = window.__OVR || {}; idbPut('textes', JSON.stringify(OVR)); } catch (e) { OVR = {}; } fin(); };
+        sc.onerror = fromCache;
+        document.head.appendChild(sc);
+        setTimeout(fin, 4000);
+      } catch (e) { fin(); }
+    });
+  }
+  function applyOverrides(d) {
+    if (!Object.keys(OVR).length) return;
+    const walk = (n) => {
+      for (const p of n.profiles || []) for (const c of p.chars) { const v = OVR[p.type + '|' + p.name + '|' + c[0]]; if (v !== undefined) c[1] = v; }
+      for (const r of n.rules || []) { const v = OVR['Rule|' + r.name]; if (v !== undefined) r.text = v; }
+      for (const k of n.kids || []) walk(k);
+    };
+    d.units.forEach(walk);
+    if (d.selector) walk(d.selector.node);
+    for (const r of d.rules || []) { const v = OVR['Rule|' + r.name]; if (v !== undefined) r.text = v; }
+  }
+  function factionEntry(fid) { return INDEX.factions.find((x) => x.id === fid); }
+  function fname(fid) { const e = factionEntry(fid); return e ? e.name : fid; }
+  function getFactionText(fid) {
+    const e = factionEntry(fid);
+    if (!e) return Promise.reject(new Error('Faction inconnue : ' + fid));
+    const key = fid + '@' + e.rev + '/' + INDEX.rev + '/' + (INDEX.build || '');
+    return idbGet(key).then((t) => t || fetchText(DATA_URL + fid + '.json').then((x) => { idbPut(key, x); return x; }));
+  }
+  function setFaction(fid, text) {
+    DATA = JSON.parse(text);
+    applyOverrides(DATA);
+    FACTION = factionEntry(fid);
+    Engine.init(DATA);
+    DETS = DATA.detachments.filter((d) => MAIN_DETS.indexOf(d.name) >= 0);
+    DYN_DEF = DATA.selector ? DATA.selector.node : null;
+    DYN_GROUP = DYN_DEF ? findGroupDef(DYN_DEF) : null;
+    DYN_LABEL = DATA.selector ? (SEL_FR[DATA.selector.label] || DATA.selector.label) : '';
+    for (const k in unitFromCache) delete unitFromCache[k];
+    eqCache = new Map();
+    lists.forEach((e) => { e.live = null; });
+  }
+  function ensureLive(e) {
+    if (e.live) return;
+    e.live = e.ser && e.ser.forces ? deRoster(e.ser) : newRoster(e.name);
+    e.live.name = e.name;
+    e.live.limit = e.limit;
+  }
+  /* active la liste i : charge sa faction si besoin */
+  function go(i, keepSheet) {
+    const e = lists[i];
+    if (!e) { render(); return; }
+    save();
+    cur = i;
+    if (!keepSheet) ui.sheet = null;
+    ui.err = null;
+    if (FACTION && FACTION.id === e.fid) { ensureLive(e); render(); return; }
+    ui.busy = 'Chargement de ' + fname(e.fid) + '…';
+    render();
+    getFactionText(e.fid).then((t) => {
+      save();
+      setFaction(e.fid, t);
+      ensureLive(e);
+      ui.busy = null;
+      render();
+    }).catch((err) => {
+      ui.busy = null;
+      ui.err = 'Impossible de charger ' + fname(e.fid) + ' (' + (err && err.message ? err.message : err) + '). Vérifiez la connexion : les factions déjà ouvertes restent disponibles hors ligne.';
+      render();
+    });
+  }
+  function startList(fid) {
+    save();
+    lists.push({ fid: fid, name: uniqueName('Nouvelle liste'), limit: 1000, pts: 0, ser: null, live: null });
+    ui.tab = 'list';
+    go(lists.length - 1);
+  }
+  function downloadAll() {
+    const todo = INDEX.factions.slice();
+    let n = 0;
+    ui.dl = '0/' + todo.length;
+    render();
+    const step = () => {
+      const f = todo.shift();
+      if (!f) { ui.dl = 'Toutes les factions sont disponibles hors ligne'; render(); return; }
+      getFactionText(f.id).then(() => { n++; ui.dl = n + '/' + (n + todo.length); render(); step(); }, () => { ui.dl = 'Échec sur ' + f.name + ' (' + n + ' faites)'; render(); });
+    };
+    step();
+  }
+
+  /* ---------- utilitaires d'affichage ---------- */
+  function esc(s) { return String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
+  function num(n) { return Math.round(n * 10) / 10; }
+  function pts(n) { return num(n) + ' pts'; }
+  let H = [];
+  function act(fn) { H.push(fn); return H.length - 1; }
+  function btn(cls, label, fn, extra) { return '<button type="button" class="' + cls + '" data-h="' + act(fn) + '"' + (extra || '') + '>' + label + '<\/button>'; }
+  function tmpValue(def, parent, count) {
+    return Engine.value({ n: def, c: count || 1, k: [], p: parent }, 'pts');
+  }
+  const unitFromCache = {};
+  function fromPts(def) {
+    if (unitFromCache[def.id] === undefined) {
+      const f = { n: { type: 'force', id: 'force' }, c: 1, k: [], p: { n: { type: 'roster' }, c: 1, k: [], p: null } };
+      unitFromCache[def.id] = Engine.total(Engine.newUnit(def, f), 'pts');
+    }
+    return unitFromCache[def.id];
+  }
+
+  /* ---------- éditeur d'options ---------- */
+  function stepper(parent, def, c, b) {
+    const hi = b.hi === Infinity ? Math.max(Engine.pcOf(parent), 1) : b.hi;
+    const dec = c > b.lo ? '' : ' disabled';
+    const inc = c < hi ? '' : ' disabled';
+    return '<div class="step">' +
+      btn('sb', '−', () => Engine.setCount(parent, def, c - 1), dec + ' aria-label="Retirer"') +
+      '<span class="sn">' + c + '<\/span>' +
+      btn('sb', '+', () => Engine.setCount(parent, def, c + 1), inc + ' aria-label="Ajouter"') +
+      '<\/div>';
+  }
+  function costLabel(v) { return v ? '<span class="cost">' + (v > 0 ? '+' : '') + num(v) + '<\/span>' : ''; }
+  function entryRow(parent, def, opts) {
+    opts = opts || {};
+    const inst = parent.k.find((x) => x.n === def);
+    const c = inst ? inst.c : 0;
+    const b = Engine.bounds(def, parent);
+    if (c === 0 && b.hi <= 0) return '';  // option indisponible dans la configuration actuelle (ex. Heavy Destroyer sous 3 Destroyers)
+    const name = inst ? Engine.displayName(inst) : def.name;
+    const fixedRow = b.lo === b.hi && b.lo > 0;
+    const val = fixedRow ? 0 : Engine.rowPrice(def, parent, inst);
+    let ctl;
+    if (opts.radio) {
+      ctl = '<span class="radio' + (c > 0 ? ' on' : '') + '" aria-hidden="true"><\/span>';
+    } else if (b.lo === b.hi && b.lo > 0) {
+      ctl = '<span class="fixed">' + (c > 1 ? '×' + c : 'inclus') + '<\/span>';
+    } else if (b.hi === 1 || (b.hi === Infinity && Engine.pcOf(parent) === 1)) {
+      ctl = btn('tog' + (c ? ' on' : ''), c ? 'Retirer' : 'Ajouter', () => Engine.setCount(parent, def, c ? 0 : 1));
+    } else {
+      ctl = stepper(parent, def, c, b);
+    }
+    const label = '<span class="lbl"><span class="nm">' + esc(name) + '<\/span>' + costLabel(val) + '<\/span>';
+    let row;
+    if (opts.radio) {
+      row = '<button type="button" class="row opt' + (c > 0 ? ' sel' : '') + '" data-h="' + act(opts.onPick) + '">' + label + ctl + '<\/button>';
+    } else {
+      row = '<div class="row' + (c > 0 ? ' sel' : '') + '">' + label + ctl + '<\/div>';
+    }
+    let nest = '';
+    if (inst && c > 0 && def.kids && def.kids.length) {
+      const inner = options(inst);
+      if (inner) nest = '<div class="nest">' + inner + '<\/div>';
+    }
+    const eq = eqInfo(def);
+    return row + (eq ? '<div class="eq">' + eq + '<\/div>' : '') + nest;
+  }
+  function groupHtml(g, parent) {
+    if (Engine.isHidden(g.n, parent)) return '';
+    const pc = Engine.pcOf(g.p);
+    const GL = Engine.limits(g.n, g.p);
+    const hi = GL.max === undefined ? Infinity : GL.max * pc;
+    const lo = GL.min * pc;
+    const opts = g.n.kids;
+    const exclusive = hi === 1;
+    const total = Engine.sum(g.k.filter((x) => !Engine.isGroup(x)));
+    let body = '';
+    for (const def of opts) {
+      if (def.type === 'group') {
+        const sub = g.k.find((x) => x.n === def);
+        if (sub) body += groupHtml(sub, g);
+        continue;
+      }
+      if (Engine.isHidden(def, g)) continue;
+      if (exclusive) {
+        const inst = g.k.find((x) => x.n === def);
+        const sel = inst && inst.c > 0;
+        body += entryRow(g, def, { radio: true, onPick: () => Engine.setCount(g, def, sel && lo === 0 ? 0 : 1) });
+      } else {
+        body += entryRow(g, def);
+      }
+    }
+    if (!body) return '';
+    const counter = hi !== Infinity && hi > 1 ? '<span class="cnt' + (total === hi ? ' ok' : '') + '">' + total + '/' + hi + '<\/span>' : '';
+    return '<div class="grp"><div class="gh"><span>' + esc(g.n.name) + '<\/span>' + counter + '<\/div>' + body + '<\/div>';
+  }
+  function options(inst) {
+    let out = '';
+    for (const def of inst.n.kids || []) {
+      if (def.type === 'group') {
+        const g = inst.k.find((x) => x.n === def);
+        if (g) out += groupHtml(g, inst);
+      } else if (!Engine.isHidden(def, inst)) {
+        out += entryRow(inst, def);
+      }
+    }
+    return out;
+  }
+
+  /* ---------- profils ---------- */
+  function table(list, cols) {
+    if (!list.length) return '';
+    let h = '<div class="tw"><table><thead><tr><th>Nom<\/th>' + cols.map((c) => '<th>' + esc(c) + '<\/th>').join('') + '<\/tr><\/thead><tbody>';
+    for (const p of list) {
+      const m = {};
+      for (const ch of p.chars) m[ch[0]] = ch[1];
+      h += '<tr><td class="tn">' + esc(p.name) + '<\/td>' + cols.map((c) => '<td>' + esc(m[c] === undefined ? '' : m[c]) + '<\/td>').join('') + '<\/tr>';
+    }
+    return h + '<\/tbody><\/table><\/div>';
+  }
+  const SIGN = (v) => v;
+  function cmap(p) { const m = {}; for (const ch of p.chars) m[ch[0]] = ch[1]; return m; }
+  function wline(p) {  // ligne compacte d'une arme : portée, type, F, PA, D
+    const m = cmap(p);
+    const pre = (l, v) => (v === undefined ? '' : l + (/^[-+x×*]?\d/i.test(v) ? '' : ' ') + v);
+    const bits = [m.Range, m.Type === m.Range ? '' : m.Type, pre('S', m.S), pre('AP', m.AP), pre('D', m.D)].filter((x) => x && x !== '-');
+    return bits.map(esc).join(' · ');
+  }
+  function wabil(p) {
+    const a = cmap(p).Abilities;
+    if (!a || a === '-') return '';
+    return a === RMT ? '<i class="rm">' + RMT + '<\/i>' : esc(a);
+  }
+  function ustats(p) {
+    const m = cmap(p);
+    return ['M', 'WS', 'BS', 'S', 'T', 'W', 'A', 'Ld', 'Save'].filter((k) => m[k] !== undefined).map((k) => k + ' ' + esc(m[k])).join(' · ');
+  }
+  function descOf(p) { const d = p.chars.find((c) => c[0] === 'Description'); return d ? d[1] : p.chars.map((c) => c[1]).join(' '); }
+  /* petit encart sous une option d'équipement : profil de l'arme, capacité, profil du modèle */
+  function eqInfo(def) {
+    if (eqCache.has(def)) return eqCache.get(def);
+    const profs = [];
+    const pull = (d, depth) => {
+      for (const p of d.profiles || []) profs.push(p);
+      for (const r of d.rules || []) profs.push({ type: 'Rule', name: r.name, chars: [['Description', r.text]] });
+      if (depth < 2) for (const k of d.kids || []) if (k.type !== 'group' && !profs.length) pull(k, depth + 1);
+    };
+    pull(def, 0);
+    let h = '';
+    const seen = {};
+    for (const p of profs) {
+      const k = p.type + '|' + p.name + '|' + JSON.stringify(p.chars);
+      if (seen[k]) continue;
+      seen[k] = 1;
+      if (p.type === 'Weapon') h += '<div class="wp"><b>' + esc(p.name) + '<\/b> ' + wline(p) + (wabil(p) ? ' <span class="wa">— ' + wabil(p) + '<\/span>' : '') + '<\/div>';
+      else if (p.type === 'Abilities' || p.type === 'Rule' || p.type === 'Warlord Trait' || p.type === 'Psychic Power') {
+        const d = descOf(p);
+        if (d && d !== RMT) h += '<div class="wp ab2"><b>' + esc(p.name) + '<\/b> ' + esc(d) + '<\/div>';
+      }
+    }
+    eqCache.set(def, h);
+    return h;
+  }
+  function weaponCards(list) {
+    return list.map((p) => '<div class="wcard"><b>' + esc(p.name) + '<\/b><div class="wl">' + wline(p) + '<\/div>' + (wabil(p) ? '<div class="wd">' + wabil(p) + '<\/div>' : '') + '<\/div>').join('');
+  }
+  function profileHtml(u) {
+    const p = Engine.collect(u);
+    let h = '';
+    if (u.n.cats && u.n.cats.length) h += '<p class="kw">' + u.n.cats.map(esc).join(' · ') + '<\/p>';
+    if (p.units.length) h += '<h4>Profil<\/h4>' + table(p.units, ['M', 'WS', 'BS', 'S', 'T', 'W', 'A', 'Ld', 'Save']);
+    const ab = p.abilities;
+    if (ab.length) {
+      h += '<h4>Règles spéciales<\/h4>';
+      for (const a of ab) h += '<p class="ab"><b>' + esc(a.name) + '<\/b> ' + (descOf(a) === RMT ? '<i class="rm">' + RMT + '<\/i>' : esc(descOf(a))) + '<\/p>';
+    }
+    if (p.weapons.length) h += '<h4>Armes équipées<\/h4>' + weaponCards(p.weapons);
+    for (const o of p.other) {
+      h += '<h4>' + esc(o.type) + ' : ' + esc(o.name) + '<\/h4><p class="ab">' + o.chars.map((c) => esc(c[0]) + ' ' + (c[1] === RMT ? '<i class="rm">' + RMT + '<\/i>' : esc(c[1]))).join(' · ') + '<\/p>';
+    }
+    return h || '<p class="note">Aucun profil disponible pour cette unité.<\/p>';
+  }
+
+  /* ---------- cartes ---------- */
+  function unitCard(f, u) {
+    const open = !!ui.open[u.uid];
+    const total = Engine.total(u, 'pts');
+    const summary = Engine.describe(u).slice(0, 5).join(' · ');
+    let h = '<article class="unit' + (open ? ' open' : '') + '">';
+    h += '<div class="uhw"><button type="button" class="uh" data-h="' + act(() => { ui.open[u.uid] = !open; }) + '" aria-expanded="' + open + '">' +
+      '<span class="un"><span class="unm">' + esc(Engine.displayName(u)) + '<\/span><span class="uss">' + esc(summary) + '<\/span><\/span>' +
+      '<span class="up">' + num(total) + '<small>pts<\/small><\/span><\/button>' +
+      '<button type="button" class="eye" aria-label="Voir le profil de ' + esc(Engine.displayName(u)) + '" data-h="' + act(() => { ui.sheet = { type: 'profile', u: u }; }) + '">' +
+      '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1.5 12S5.5 5 12 5s10.5 7 10.5 7-4 7-10.5 7S1.5 12 1.5 12z"/><circle cx="12" cy="12" r="3"/><\/svg><\/button><\/div>';
+    if (open) {
+      h += '<div class="ed">' + options(u);
+      h += '<div class="acts">' +
+        btn('ghost', 'Dupliquer', () => {
+          const c = Engine.de(u.n, Engine.ser(u), f);
+          c.uid = ++uidc; f.units.push(c); sync(f); ui.open[c.uid] = true;
+        }) +
+        btn('ghost bad', 'Retirer', () => { f.units = f.units.filter((x) => x !== u); sync(f); }) +
+        '<\/div><\/div>';
+    }
+    return h + '<\/article>';
+  }
+  function slotSection(f, slot) {
+    const mm = f.det.slots[slot];
+    const units = f.units.filter((u) => u.n.slot === slot);
+    let range = '';
+    if (mm) range = slot === 'Dedicated Transport' ? '' : (mm[1] === null ? mm[0] + '+' : (mm[0] === mm[1] ? '' + mm[0] : mm[0] + '–' + mm[1]));
+    if (!mm && units.length) range = 'non autorisé';
+    const bad = (!mm && units.length > 0) || (mm && slot !== 'Dedicated Transport' && (units.length < mm[0] || (mm[1] !== null && units.length > mm[1])));
+    let h = '<section class="slot"><div class="sh"><h3>' + SLOT_FR[slot] + '<\/h3>' +
+      '<span class="sc' + (bad ? ' bad' : '') + '">' + units.length + (range ? ' / ' + range : '') + '<\/span><\/div>';
+    for (const u of units) h += unitCard(f, u);
+    h += btn('add', '+ Ajouter ' + (slot === 'HQ' ? 'un QG' : 'une unité'), () => { ui.sheet = { type: 'add', f: f, slot: slot }; ui.search = ''; ui.chip = slot; });
+    return h + '<\/section>';
+  }
+  function factionRules(f) {
+    const items = [];
+    const g = f.dyn ? dynGroup(f) : null;
+    const sel = g ? g.k.find((x) => !Engine.isGroup(x) && x.c > 0) : null;
+    if (sel) {
+      const c = Engine.collect(sel);
+      for (const a of c.abilities.concat(c.other)) items.push({ n: a.name, t: descOf(a) });
+    }
+    for (const r of DATA.rules || []) items.push({ n: r.name, t: r.text });
+    const seen = {};
+    let h = '';
+    for (const it of items) {
+      if (seen[it.n]) continue;
+      seen[it.n] = 1;
+      const key = 'fr|' + it.n;
+      const open = !!ui.fr[key];
+      const txt = it.t && it.t !== RMT ? esc(it.t) : '<i class="rm">' + RMT + '<\/i>';
+      h += btn('fri' + (open ? ' open' : ''), '<b>' + esc(it.n) + '<\/b> ' + txt, () => { ui.fr[key] = !ui.fr[key]; }, ' data-noscroll="1"');
+    }
+    return h ? '<div class="fr">' + h + '<\/div>' : '';
+  }
+  function forceCard(f) {
+    const slots = SLOT_ORDER.filter((s) => f.det.slots[s] || f.units.some((u) => u.n.slot === s));
+    const dyn = currentDyn(f);
+    let h = '<div class="force"><div class="fh"><div><h2>' + esc(f.det.name) + '<\/h2><span class="fcp">' + (f.det.cp >= 0 ? '+' : '') + f.det.cp + ' CP<\/span><\/div><div class="fa">' +
+      btn('ghost sm', 'Changer', () => { ui.sheet = { type: 'det', f: f }; }) +
+      btn('ghost bad sm', 'Retirer', () => {
+        const r = R();
+        if (ui.confirm === 'f' + r.forces.indexOf(f)) { r.forces = r.forces.filter((x) => x !== f); r.node.k = r.forces; ui.confirm = null; }
+        else ui.confirm = 'f' + r.forces.indexOf(f);
+      }) + '<\/div><\/div>';
+    if (ui.confirm === 'f' + R().forces.indexOf(f)) h = h.replace('>Retirer<', '>Confirmer ?<');
+    if (f.dyn && dynOptions(f).length > 1) {
+      h += '<label class="dyn" for="dyn' + R().forces.indexOf(f) + '"><span>' + esc(DYN_LABEL) + '<\/span><select id="dyn' + R().forces.indexOf(f) + '" data-hi="' + act((v) => { setDyn(f, v); sync(f); }) + '">' +
+        dynOptions(f).map((o) => '<option value="' + esc(o.name) + '"' + (o.name === dyn ? ' selected' : '') + '>' + esc(dynClean(o.name)) + '<\/option>').join('') +
+        '<\/select><\/label>';
+    }
+    h += factionRules(f);
+    for (const s of slots) h += slotSection(f, s);
+    return h + '<\/div>';
+  }
+
+  /* ---------- écrans ---------- */
+  function listTab() {
+    const r = R();
+    let h = '<div class="meta"><label for="lname"><span>Nom de la liste<\/span><input id="lname" type="text" value="' + esc(r.name) + '" data-hi="' + act((v) => { r.name = v; save(); renderHeaderOnly(); }) + '" data-chg="' + act((v) => { r.name = uniqueName(v, cur); }) + '" data-silent="1"><\/label>' +
+      '<label for="llimit" class="lim"><span>Limite (pts)<\/span><input id="llimit" type="text" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-select="1" value="' + r.limit + '" data-hi="' + act((v) => {
+        const n = parseInt(String(v).replace(/[^0-9]/g, ''), 10);
+        r.limit = isNaN(n) ? 0 : n;
+        renderHeaderOnly();
+      }) + '" data-silent="1"><\/label><\/div>';
+    if (!r.forces.length) {
+      h += '<div class="empty"><h2>Aucun détachement<\/h2><p>Une liste commence par un détachement : il fixe les emplacements disponibles et les points de commandement.<\/p><\/div>';
+    }
+    for (const f of r.forces) h += forceCard(f);
+    h += btn('addf', '+ Ajouter un détachement', () => { ui.sheet = { type: 'det' }; });
+    return h;
+  }
+  function checkBody() {
+    const r = R();
+    const w = Engine.validate(r, r.limit);
+    let h = '';
+    if (!w.length) h += '<p class="okmsg">Aucun problème détecté. La liste respecte les règles de composition connues par l\'appli.<\/p>';
+    else h += '<ul class="warn">' + w.map((x) => '<li>' + esc(x) + '<\/li>').join('') + '<\/ul>';
+    h += '<p class="note">Le contrôle couvre les emplacements du détachement, les tailles d\'unités, les choix d\'équipement, le Seigneur de guerre et la limite de points. Les règles propres à une campagne ou à un scénario ne sont pas vérifiées.<\/p>';
+    return h;
+  }
+  function exportText() {
+    const r = R();
+    const L = [];
+    const tp = Engine.totalPoints(r);
+    L.push(FACTION.name.toUpperCase() + ' · ' + r.name);
+    L.push(num(tp) + ' / ' + r.limit + ' pts · ' + Engine.totalCP(r) + ' CP');
+    for (const f of r.forces) {
+      L.push('');
+      L.push('== ' + f.det.name + ' (' + (f.det.cp >= 0 ? '+' : '') + f.det.cp + ' CP)' + (currentDyn(f) ? ' · ' + DYN_LABEL + ' ' + dynClean(currentDyn(f)) : '') + ' ==');
+      for (const s of SLOT_ORDER) {
+        const us = f.units.filter((u) => u.n.slot === s);
+        if (!us.length) continue;
+        L.push(SLOT_FR[s]);
+        for (const u of us) {
+          const d = Engine.describe(u);
+          L.push('  ' + Engine.displayName(u) + ' [' + num(Engine.total(u, 'pts')) + ' pts]' + (d.length ? ' : ' + d.join(', ') : ''));
+        }
+      }
+    }
+    L.push('');
+    L.push('— Code d\'import (à coller dans l\'onglet Import) —');
+    L.push(shareCode(r));
+    return L.join('\n');
+  }
+  function exportTab() {
+    const plural = lists.length > 1;
+    let h = '<section class="xp"><h3 class="xh"><span class="xn">1<\/span>Une seule liste<\/h3>' +
+      '<p class="note">Choisissez la liste, copiez son texte pour l\'envoyer à votre famille ou l\'avoir sous la main pendant la partie. La dernière ligne (code d\'import) permet de la recharger dans l\'onglet Import.<\/p>';
+    h += '<label class="dyn" for="expsel"><span>Liste à exporter<\/span><select id="expsel" data-hi="' + act((v) => { ui.tab = 'export'; if (+v !== cur) go(+v); }) + '">' +
+      lists.map((e, i) => { const inf = entryInfo(e); return '<option value="' + i + '"' + (i === cur ? ' selected' : '') + '>' + esc(inf.name) + ' · ' + esc(fname(e.fid)) + ' · ' + num(inf.pts) + ' pts<\/option>'; }).join('') +
+      '<\/select><\/label>';
+    h += btn('primary', 'Copier cette liste', () => copyText(exportText(), 'exp', 'Liste copiée'), ' data-noscroll="1"');
+    h += '<label class="sr" for="exp">Texte de la liste<\/label><textarea id="exp" class="search imp" rows="10" readonly>' + esc(exportText()) + '<\/textarea><\/section>';
+    h += '<section class="xp xall"><h3 class="xh"><span class="xn">2<\/span>Toutes les listes (sauvegarde)<\/h3>' +
+      '<p class="note">Un seul texte qui contient vos ' + lists.length + ' liste' + (plural ? 's' : '') + ' enregistrée' + (plural ? 's' : '') + '. Gardez-le dans une note ou envoyez-le-vous : l\'onglet Import les récupère toutes d\'un coup (utile si vous changez de téléphone ou de navigateur).<\/p>';
+    h += btn('primary', 'Copier toutes les listes', () => copyText(backupText(), 'bak', 'Sauvegarde copiée'), ' data-noscroll="1"');
+    h += '<label class="sr" for="bak">Sauvegarde<\/label><textarea id="bak" class="search imp" rows="6" readonly>' + esc(backupText()) + '<\/textarea><\/section>';
+    return h;
+  }
+  function copyText(t, id, msg) {
+    const done = () => { ui.toast = msg; render(); setTimeout(() => { ui.toast = ''; render(); }, 1800); };
+    try {
+      navigator.clipboard.writeText(t).then(done, () => selectExp(id));
+    } catch (e) { selectExp(id); }
+  }
+  function selectExp(id) {
+    const el = document.getElementById(id || 'exp');
+    if (!el) return;
+    el.focus();
+    el.select();
+    ui.toast = 'Texte sélectionné : copiez-le avec le menu du téléphone';
+    render();
+  }
+
+  /* ---------- feuilles (tiroirs) ---------- */
+  function sheetHtml() {
+    const s = ui.sheet;
+    if (!s) return '';
+    let body = '', title = '';
+    if (s.type === 'det') {
+      title = s.f ? 'Changer de détachement' : 'Choisir un détachement';
+      body = (s.f ? '<p class="note">Les unités restent en place. Chaque détachement indique si la liste actuelle y est conforme.<\/p>' : '') + '<ul class="pick">' + DETS.map((d) => {
+        const desc = SLOT_ORDER.filter((k) => d.slots[k] && k !== 'Dedicated Transport').map((k) => {
+          const m = d.slots[k];
+          return SLOT_FR[k] + ' ' + (m[1] === null ? m[0] + '+' : (m[0] === m[1] ? m[0] : m[0] + '–' + m[1]));
+        }).join(' · ');
+        let status = '';
+        if (s.f) {
+          const iss = Engine.slotIssues(s.f.units, d);
+          status = d === s.f.det ? '<span class="pd">Détachement actuel<\/span>'
+            : (iss.length ? '<span class="pd bad">' + iss.length + (iss.length > 1 ? ' problèmes' : ' problème') + ' : ' + esc(iss.map((x) => x.replace(d.name + ' : ', '')).join(' ; ')) + '<\/span>'
+              : '<span class="pd ok">Les unités actuelles respectent ce détachement<\/span>');
+        }
+        return '<li>' + btn('pickrow', '<span class="pn">' + esc(d.name) + '<em>' + (d.cp >= 0 ? '+' : '') + d.cp + ' CP<\/em><\/span><span class="pd">' + esc(desc || 'Aucune limite') + '<\/span>' + status,
+          () => { if (s.f) s.f.det = d; else addForce(R(), d); ui.sheet = null; }) + '<\/li>';
+      }).join('') + '<\/ul>';
+    } else if (s.type === 'add') {
+      title = 'Ajouter une unité';
+      const slots = SLOT_ORDER.filter((k) => DATA.units.some((u) => u.slot === k));
+      body = '<div class="chips" role="tablist">' + btn('chip' + (ui.chip === 'all' ? ' on' : ''), 'Toutes', () => { ui.chip = 'all'; }) +
+        slots.map((k) => btn('chip' + (ui.chip === k ? ' on' : ''), SLOT_FR[k], () => { ui.chip = k; })).join('') + '<\/div>' +
+        '<label class="sr" for="usearch">Rechercher une unité<\/label><input id="usearch" class="search" type="search" placeholder="Rechercher une unité" value="' + esc(ui.search) + '" data-hi="' + act((v) => { ui.search = v; refreshResults(); }) + '" data-silent="1">' +
+        '<div id="results">' + resultsHtml() + '<\/div>';
+    } else if (s.type === 'newlist') {
+      title = 'Nouvelle liste : choisir une faction';
+      body = pickerHtml();
+    } else if (s.type === 'profile') {
+      title = Engine.displayName(s.u);
+      body = '<div class="refs">' + profileHtml(s.u) + '<\/div>';
+    } else if (s.type === 'check') {
+      title = 'Contrôle de la liste';
+      body = checkBody();
+    } else if (s.type === 'import') {
+      title = 'Importer une liste';
+      body = importHtml();
+    } else if (s.type === 'lists') {
+      title = 'Mes listes';
+      body = listsBody(false);
+    }
+    return '<div class="scrim" data-h="' + act(() => { ui.sheet = null; ui.confirm = null; }) + '"><\/div>' +
+      '<div class="sheet' + (s.type === 'check' ? ' top' : '') + '" role="dialog" aria-modal="true" aria-label="' + esc(title) + '"><div class="shh"><h2>' + esc(title) + '<\/h2>' +
+      btn('ghost sm', 'Fermer', () => { ui.sheet = null; ui.confirm = null; }) + '<\/div><div class="shb">' + body + '<\/div><\/div>';
+  }
+  function listsBody(inTab) {
+    let h = '<ul class="pick">' + lists.map((e, i) => {
+      const inf = entryInfo(e);
+      return '<li class="lrow' + (i === cur ? ' cur' : '') + '">' + btn('pickrow', '<span class="pn">' + esc(inf.name) + '<em>' + num(inf.pts) + ' / ' + inf.limit + ' pts<\/em><\/span><span class="pd">' + esc(fname(e.fid)) + (i === cur ? ' · en cours' : '') + '<\/span>',
+        () => { if (inTab) ui.tab = 'list'; go(i); }) +
+      '<div class="lact">' + btn('ghost sm', 'Dupliquer', () => {
+        save();
+        const c = { fid: e.fid, name: uniqueName(inf.name + ' (copie)'), limit: inf.limit, pts: inf.pts, ser: JSON.parse(JSON.stringify(e.ser || {})), live: null };
+        lists.splice(i + 1, 0, c);
+        if (i < cur) cur++;
+        toast('Liste dupliquée');
+      }) + btn('ghost bad sm', ui.confirm === 'l' + i ? 'Confirmer ?' : 'Supprimer', () => {
+        if (ui.confirm === 'l' + i) {
+          const wasCur = i === cur;
+          lists.splice(i, 1);
+          ui.confirm = null;
+          if (i < cur) cur--;
+          if (!lists.length) { cur = 0; ui.sheet = null; } else if (wasCur) { go(Math.min(cur, lists.length - 1), true); }
+        } else ui.confirm = 'l' + i;
+      }) + '<\/div><\/li>';
+    }).join('') + '<\/ul>';
+    h += btn('primary', 'Nouvelle liste', () => { ui.sheet = { type: 'newlist' }; ui.fsearch = ''; });
+    return h;
+  }
+  function listsTab() {
+    return '<h2 class="ph">Listes enregistrées (' + lists.length + ')<\/h2>' + listsBody(true);
+  }
+  function importHtml() {
+    return '<p class="note">Collez ici le texte d\'une liste envoyée par un membre de la famille, ou une sauvegarde complète (copiés depuis l\'onglet Export). Les listes seront enregistrées ; si un nom existe déjà, un numéro est ajouté.<\/p>' +
+      '<label class="sr" for="impt">Texte de la liste<\/label><textarea id="impt" class="search imp" rows="8" placeholder="Collez le texte ici" data-hi="' + act((v) => { ui.imp = v; ui.impErr = ''; }) + '" data-silent="1">' + esc(ui.imp) + '<\/textarea>' +
+      (ui.impErr ? '<p class="warn1" role="alert">' + esc(ui.impErr) + '<\/p>' : '') +
+      btn('primary', 'Importer la liste', () => { importList(ui.imp); }, ' data-noscroll="1"');
+  }
+  function importTab() { return '<h2 class="ph">Importer une liste<\/h2>' + importHtml(); }
+  function pickerResults() {
+    const q = ui.fsearch.trim().toLowerCase();
+    const list = INDEX.factions.filter((f) => !q || (f.group + ' ' + f.name).toLowerCase().indexOf(q) >= 0);
+    if (!list.length) return '<p class="note">Aucune faction ne correspond.<\/p>';
+    let h = '', g = null;
+    for (const f of list) {
+      if (f.group !== g) { if (g !== null) h += '<\/ul>'; g = f.group; h += '<h4 class="fg">' + esc(g) + '<\/h4><ul class="pick">'; }
+      h += '<li>' + btn('pickrow', '<span class="pn">' + esc(f.name) + '<em>' + f.units + ' unités<\/em><\/span>', () => { startList(f.id); }) + '<\/li>';
+    }
+    return h + '<\/ul>';
+  }
+  function pickerHtml() {
+    return '<label class="sr" for="fsearch">Rechercher une faction<\/label><input id="fsearch" class="search" type="search" placeholder="Rechercher une faction" value="' + esc(ui.fsearch) + '" data-hi="' + act((v) => { ui.fsearch = v; refreshFactions(); }) + '" data-silent="1">' +
+      '<div id="fres">' + pickerResults() + '<\/div>' +
+      '<div class="dl">' + btn('ghost sm', 'Tout télécharger pour le hors ligne', downloadAll, ' data-noscroll="1"') + (ui.dl ? '<span class="note">' + esc(ui.dl) + '<\/span>' : '') + '<\/div>';
+  }
+  function refreshFactions() {
+    const el = document.getElementById('fres');
+    if (!el) return;
+    H = H.slice(0, ui.keep);
+    el.innerHTML = pickerResults();
+  }
+  function resultsHtml() {
+    const s = ui.sheet;
+    const q = ui.search.trim().toLowerCase();
+    const list = DATA.units.filter((u) => (ui.chip === 'all' || u.slot === ui.chip) && (!q || u.name.toLowerCase().indexOf(q) >= 0));
+    if (!list.length) return '<p class="note">Aucune unité ne correspond.<\/p>';
+    return '<ul class="pick">' + list.map((u) =>
+      '<li>' + btn('pickrow', '<span class="pn">' + esc(u.name) + '<em>dès ' + num(fromPts(u)) + ' pts<\/em><\/span><span class="pd">' + SLOT_FR[u.slot] + '<\/span>', () => {
+        const nu = addUnit(s.f, u);
+        ui.open[nu.uid] = true;
+        ui.sheet = null;
+        ui.tab = 'list';
+      }) + '<\/li>').join('') + '<\/ul>';
+  }
+  function refreshResults() {
+    const el = document.getElementById('results');
+    if (!el) return;
+    H = H.slice(0, ui.keep);
+    el.innerHTML = resultsHtml();
+  }
+
+  /* ---------- rendu ---------- */
+  function headerHtml() {
+    const r = R();
+    const tp = Engine.totalPoints(r);
+    const pct = r.limit > 0 ? Math.min(100, (tp / r.limit) * 100) : 0;
+    const over = r.limit > 0 && tp > r.limit;
+    const nw = Engine.validate(r, r.limit).length;
+    return '<header class="top"><div class="hrow">' +
+      btn('lname', '<span class="brand">' + esc(FACTION ? FACTION.name : '') + '<\/span><span class="ln">' + esc(r.name) + '<\/span>', () => { ui.tab = 'lists'; }, ' aria-label="Mes listes"') +
+      '<div class="tot' + (over ? ' over' : '') + '"><b>' + num(tp) + '<\/b><span>/ ' + (r.limit > 0 ? r.limit : '—') + ' pts<\/span><\/div><\/div>' +
+      '<div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="' + r.limit + '" aria-valuenow="' + num(tp) + '"><i style="width:' + pct + '%"><\/i><\/div>' +
+      '<div class="hsub"><span>' + Engine.totalCP(r) + ' CP<\/span>' + btn('wc' + (nw ? ' has' : ''), nw ? nw + (nw > 1 ? ' alertes' : ' alerte') : 'Liste valide', () => { ui.sheet = { type: 'check' }; }) + '<\/div><\/header>';
+  }
+  function navHtml() {
+    const tabs = [['list', 'En cours'], ['lists', 'Listes'], ['export', 'Export'], ['import', 'Import']];
+    return '<nav class="nav">' + tabs.map((t) => btn('nb' + (ui.tab === t[0] ? ' on' : ''), t[1], () => { ui.tab = t[0]; window.scrollTo(0, 0); }, ui.tab === t[0] ? ' aria-current="page"' : '')).join('') + '<\/nav>';
+  }
+  function renderHeaderOnly() {
+    const old = document.querySelector('.top');
+    if (!old) return;
+    H = H.slice(0, ui.keep);
+    const tmp = document.createElement('div');
+    tmp.innerHTML = headerHtml();
+    old.replaceWith(tmp.firstChild);
+  }
+  function plainScreen() {
+    if (ui.busy) return '<div class="boot"><p>' + esc(ui.busy) + '<\/p><\/div>';
+    if (ui.err) {
+      return '<div class="boot"><h2>Chargement impossible<\/h2><p>' + esc(ui.err) + '<\/p>' +
+        btn('primary', 'Réessayer', () => { if (lists.length) go(cur); else location.reload(); }) +
+        (lists.length > 1 ? btn('ghost', 'Mes listes', () => { ui.sheet = { type: 'lists' }; }) : '') + '<\/div>';
+    }
+    return '<div class="boot welcome"><h1>Listes Warhammer 40,000<\/h1><p>Choisissez une faction pour commencer une liste (8e édition), ou importez une liste reçue.<\/p>' + btn('ghost', 'Importer une liste', () => { ui.sheet = { type: 'import' }; }) + pickerHtml() + '<\/div>';
+  }
+  function render() {
+    const y = window.scrollY;
+    H = [];
+    let html;
+    const e = lists[cur];
+    if (ui.busy || ui.err || !e || !e.live || !FACTION || FACTION.id !== e.fid) {
+      html = plainScreen() + (ui.sheet && (ui.sheet.type === 'lists' || ui.sheet.type === 'import') ? sheetHtml() : '');
+    } else {
+      let main;
+      if (ui.tab === 'lists') main = listsTab();
+      else if (ui.tab === 'import') main = importTab();
+      else if (ui.tab === 'export') main = exportTab();
+      else main = listTab();
+      html = headerHtml() + '<main class="main">' + main + '<\/main>' + navHtml() + sheetHtml() +
+        (ui.toast ? '<div class="toast" role="status">' + esc(ui.toast) + '<\/div>' : '');
+    }
+    ui.keep = H.length;
+    document.getElementById('app').innerHTML = html;
+    document.body.classList.toggle('lock', !!ui.sheet);
+    window.scrollTo(0, y);
+    save();
+  }
+
+  /* ---------- événements (délégation) ---------- */
+  document.addEventListener('click', (e) => {
+    const t = e.target.closest('[data-h]');
+    if (!t || t.disabled) return;
+    const fn = H[parseInt(t.getAttribute('data-h'), 10)];
+    if (!fn) return;
+    fn();
+    render();
+  });
+  document.addEventListener('focusin', (e) => {
+    const t = e.target;
+    if (t && t.hasAttribute && t.hasAttribute('data-select') && t.select) t.select();
+  });
+  document.addEventListener('change', (e) => {
+    const t = e.target.closest ? e.target.closest('[data-chg]') : null;
+    if (!t) return;
+    const fn = H[parseInt(t.getAttribute('data-chg'), 10)];
+    if (!fn) return;
+    fn(t.value);
+    render();
+  });
+  document.addEventListener('input', (e) => {
+    const t = e.target.closest('[data-hi]');
+    if (!t) return;
+    const fn = H[parseInt(t.getAttribute('data-hi'), 10)];
+    if (!fn) return;
+    fn(t.value);
+    if (!t.hasAttribute('data-silent')) render();
+    else save();
+  });
+
+  render();
+  load();
+  loadIndex().then(loadOverrides).then(() => {
+    ui.busy = null;
+    if (lists.length) go(cur); else render();
+  }).catch((err) => {
+    ui.busy = null;
+    ui.err = 'Les données ne sont pas disponibles (' + (err && err.message ? err.message : err) + ').';
+    render();
+  });
+
+})();
+</script>
