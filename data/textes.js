@@ -6,9 +6,6 @@
 //     "Weapon|Staff of Light (Shooting)|Abilities": "L'effet spécial de l'arme.",
 //     "Rule|Living Metal": "Le texte de la règle Living Metal.",
 // La liste complète des textes manquants (« [text removed] ») est dans build/textes/a-completer.json :
-// On y copie la clé telle quelle. Chaque ligne se termine par une virgule. Enregistrez, puis rechargez la page.
-// La correction s'applique à toutes les factions qui utilisent cette règle.
-// Une correction remplace aussi un texte déjà présent. Pour l'annuler, supprimez sa ligne.
-
+// on y copie la clé telle quelle. Chaque ligne se termine par une virgule. Enregistrez, puis rechargez la page.
 window.__OVR = {
 };
