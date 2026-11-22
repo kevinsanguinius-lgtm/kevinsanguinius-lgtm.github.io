@@ -1,5 +1,18 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#14764f">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Listes 40K">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" href="icons/icon-192.png">
+<style>html{-webkit-text-size-adjust:100%}body{margin:0}[hidden]{display:none!important}</style>
 <title>Listes Warhammer 40K</title>
-<meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
 <style>
 /* Mise en page : une colonne étroite pensée pour le téléphone, en-tête de points collé en haut, navigation fixe en bas. */
@@ -50,6 +63,8 @@ h1, h2, h3, h4 { font-family: var(--f-display); margin: 0; line-height: 1.15; te
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
 
 #app { max-width: 640px; margin: 0 auto; }
+#app.wide { max-width: 1100px; }
+@media (min-width: 760px) { #app.wide .cmp { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px; } }
 
 /* en-tête */
 .top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); padding: 10px 0 8px; border-bottom: 1px solid var(--line); }
@@ -64,6 +79,10 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 .pane { min-width: 0; background: var(--raised); border: 1px solid var(--line); border-radius: 8px; padding: 8px; }
 .pane.cur { border-color: var(--accent); }
 .pane.ref { filter: grayscale(1); opacity: .58; }
+.pane.refed { filter: none; opacity: 1; border-color: var(--line); }
+.ptog { float: left; margin: 0 6px 0 0; min-height: 28px; padding: 0 8px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); font: 600 11px/1 var(--f-display); cursor: pointer; }
+.ptog.on { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+.pane.ro .ptog { pointer-events: auto; }
 .pt { display: flex; flex-direction: column; gap: 2px; margin-bottom: 6px; padding-bottom: 6px; border-bottom: 1px solid var(--line); }
 .tag { font: 600 9.5px/1 var(--f-display); letter-spacing: .14em; text-transform: uppercase; color: var(--accent); }
 .pn2 { font-size: 13px; overflow-wrap: anywhere; }
@@ -266,6 +285,25 @@ th:first-child { background: var(--surface); }
 .fblk .fr { margin: 0; }
 .wlsub { display: flex; flex-direction: column; gap: 2px; margin: 2px 0 0 10px; padding: 4px 0 2px 10px; border-left: 2px solid var(--accent); }
 .wlh { display: flex; justify-content: space-between; font: 600 10.5px/1 var(--f-display); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); padding: 4px 0; }
+
+/* ---- téléphone : pas de défilement latéral, pas de zoom parasite, textes lisibles ---- */
+html { overflow-x: hidden; max-width: 100%; touch-action: pan-x pan-y; -webkit-tap-highlight-color: transparent; }
+body { overflow-x: hidden; max-width: 100%; min-width: 0; overscroll-behavior-x: none; }
+#app { overflow-x: clip; }
+#app, #app * { min-width: 0; }
+#app p, #app h1, #app h2, #app h3, #app h4, #app span, #app b, #app em, #app label { overflow-wrap: anywhere; }
+input, select, textarea { font-size: 16px !important; max-width: 100%; }
+.tw, .chips { max-width: 100%; }
+.tag, .psl { font-size: 11px; }
+.cs, .pdy { font-size: 11.5px; }
+.pp { font-size: 12px; }
+.cl { font-size: 13px; }
+.wlh, .gh { font-size: 11.5px; }
+.pane.edit .fh h2, .pane.edit .fcp, .pane.edit .fa .ghost, .pane.edit .dyn, .pane.edit .meta label { font-size: 11.5px; }
+.pane.ro .fa, .pane.ro .fh .ghost, .pane.ro .dyn, .pane.ro .ed, .pane.ro .addf, .pane.ro .slh button, .pane.ro .meta { pointer-events: none; }
+.pane.ro .acts, .pane.ro .addf, .pane.ro .fa, .pane.ro button.add { display: none; }
+.pane.ro .fh .ghost { display: none; }
+.wp, .fri { font-size: 12.5px; }
 </style>
 <div id="app"></div>
 <script>/* Moteur de liste : arbre de sélections façon BattleScribe (comptes absolus par sélection). */
@@ -734,7 +772,7 @@ const Engine = (function () {
     return r;
   }
   function newForce(r, det) {
-    const f = { n: { type: 'force', id: 'force' }, c: 1, k: [], p: r.node, det: det, units: [], dyn: null };
+    const f = { n: { type: 'force', id: 'force' }, c: 1, k: [], p: r.node, det: det, units: [], dyn: null, fid: FACTION ? FACTION.id : null };
     r.node.k.push(f);
     r.forces.push(f);
     return f;
@@ -782,10 +820,13 @@ const Engine = (function () {
     const o = g && g.k.find((x) => !Engine.isGroup(x) && x.c > 0);
     return o ? o.n.name : '';
   }
-  function addForce(r, det) {
+  function addForce(r, det, fid) {
+    const main = mainFid();
+    if (fid && fid !== main) activate(fid);
     const f = newForce(r, det);
     if (DYN_DEF && DYN_GROUP) { f.dyn = Engine.newUnit(DYN_DEF, f); setDyn(f, defaultDyn(f)); }
     sync(f);
+    if (main) activate(main);
     return f;
   }
   function addUnit(f, def) {
@@ -795,7 +836,8 @@ const Engine = (function () {
     sync(f);
     return u;
   }
-  function R() { return lists[cur].live; }
+  let roR = null;  // roster de référence affiché en lecture seule (comparaison)
+  function R() { return roR || lists[cur].live; }
 
   /* ---------- sauvegarde ---------- */
   function serRoster(r) {
@@ -803,15 +845,17 @@ const Engine = (function () {
       name: r.name, limit: r.limit,
       forces: r.forces.map((f) => ({
         d: f.det.id,
+        fi: f.fid && f.fid !== mainFid() ? f.fid : undefined,
         dyn: f.dyn ? Engine.ser(f.dyn) : null,
         units: f.units.map((u) => ({ u: u.n.id, t: Engine.ser(u) })),
       })),
     };
   }
-  function deRoster(o) {
+  function deRoster(o, main) {
     const r = newRoster(o.name);
     r.limit = typeof o.limit === 'number' ? o.limit : 1000;
     for (const fo of o.forces) {
+      if (!activate(fo.fi || main)) continue;
       const det = DATA.detachments.find((q) => q.id === fo.d);
       if (!det) continue;
       const f = newForce(r, det);
@@ -825,6 +869,7 @@ const Engine = (function () {
       }
       sync(f);
     }
+    activate(main);
     return r;
   }
   function uniqueName(name, except) {
@@ -862,6 +907,7 @@ const Engine = (function () {
       L.push('');
     }
     L.push('(à coller dans l\'onglet Import pour tout récupérer)');
+    activate(mainFid());
     return L.join('\n');
   }
   function parseCodes(text) {
@@ -902,6 +948,8 @@ const Engine = (function () {
     if (!ready) return;
     const c = lists[cur];
     if (c && c.live) { c.ser = serRoster(c.live); c.name = c.live.name; c.limit = c.live.limit; c.pts = Engine.totalPoints(c.live); }
+    const rf = ui.cmp;
+    if (rf && rf.edit && rf.live) { rf.ser = serRoster(rf.live); rf.name = rf.live.name; rf.limit = rf.live.limit; rf.pts = Engine.totalPoints(rf.live); }
     try {
       localStorage.setItem(STORE, JSON.stringify({ cur: cur, lists: lists.map((e) => Object.assign({}, e.ser || {}, { fid: e.fid, name: e.name, limit: e.limit, pts: e.pts })) }));
     } catch (e) { /* stockage indisponible */ }
@@ -996,22 +1044,47 @@ const Engine = (function () {
     const key = fid + '@' + e.rev + '/' + INDEX.rev + '/' + (INDEX.build || '');
     return idbGet(key).then((t) => t || fetchText(DATA_URL + fid + '.json').then((x) => { idbPut(key, x); return x; }));
   }
-  function setFaction(fid, text) {
-    DATA = JSON.parse(text);
-    applyOverrides(DATA);
-    FACTION = factionEntry(fid);
+  /* une faction chargée = un « contexte » gardé en mémoire ; une liste peut mélanger plusieurs factions (un contexte par détachement) */
+  const CTX = {};
+  function mkCtx(fid, text) {
+    if (CTX[fid]) return CTX[fid];
+    const d = JSON.parse(text);
+    applyOverrides(d);
+    const def = d.selector ? d.selector.node : null;
+    return (CTX[fid] = {
+      fid: fid, DATA: d, FACTION: factionEntry(fid),
+      DETS: d.detachments.filter((x) => MAIN_DETS.indexOf(x.name) >= 0),
+      DYN_DEF: def, DYN_GROUP: def ? findGroupDef(def) : null,
+      DYN_LABEL: d.selector ? (SEL_FR[d.selector.label] || d.selector.label) : '',
+    });
+  }
+  function activate(fid) {
+    const c = CTX[fid];
+    if (!c) return false;
+    DATA = c.DATA; FACTION = c.FACTION; DETS = c.DETS; DYN_DEF = c.DYN_DEF; DYN_GROUP = c.DYN_GROUP; DYN_LABEL = c.DYN_LABEL;
     Engine.init(DATA);
-    DETS = DATA.detachments.filter((d) => MAIN_DETS.indexOf(d.name) >= 0);
-    DYN_DEF = DATA.selector ? DATA.selector.node : null;
-    DYN_GROUP = DYN_DEF ? findGroupDef(DYN_DEF) : null;
-    DYN_LABEL = DATA.selector ? (SEL_FR[DATA.selector.label] || DATA.selector.label) : '';
-    for (const k in unitFromCache) delete unitFromCache[k];
-    eqCache = new Map();
-    lists.forEach((e) => { e.live = null; });
+    return true;
+  }
+  function mainFid() { return lists[cur] ? lists[cur].fid : (FACTION ? FACTION.id : null); }
+  function withF(f, fn) {  // exécute fn avec les données de la faction du détachement f
+    const prev = FACTION ? FACTION.id : null;
+    if (f && f.fid) activate(f.fid);
+    try { return fn(); } finally { if (prev) activate(prev); }
+  }
+  function setFaction(fid, text) { mkCtx(fid, text); activate(fid); }
+  function needFids(e) {
+    const out = [e.fid];
+    const fs = e.live ? e.live.forces.map((f) => f.fid) : ((e.ser && e.ser.forces) || []).map((f) => f.fi);
+    for (const x of fs) if (x && out.indexOf(x) < 0) out.push(x);
+    return out;
+  }
+  function loadFor(e) {  // charge toutes les factions utilisées par la liste e
+    const todo = needFids(e).filter((x) => !CTX[x]);
+    return Promise.all(todo.map((x) => getFactionText(x).then((t) => { mkCtx(x, t); })));
   }
   function ensureLive(e) {
     if (e.live) return;
-    e.live = e.ser && e.ser.forces ? deRoster(e.ser) : newRoster(e.name);
+    e.live = e.ser && e.ser.forces ? deRoster(e.ser, e.fid) : newRoster(e.name);
     e.live.name = e.name;
     e.live.limit = e.limit;
   }
@@ -1023,12 +1096,12 @@ const Engine = (function () {
     cur = i;
     if (!keepSheet) ui.sheet = null;
     ui.err = null;
-    if (FACTION && FACTION.id === e.fid) { ensureLive(e); render(); return; }
+    if (needFids(e).every((x) => CTX[x])) { activate(e.fid); ensureLive(e); render(); return; }
     ui.busy = 'Chargement de ' + fname(e.fid) + '…';
     render();
-    getFactionText(e.fid).then((t) => {
+    loadFor(e).then(() => {
       save();
-      setFaction(e.fid, t);
+      activate(e.fid);
       ensureLive(e);
       ui.busy = null;
       render();
@@ -1062,18 +1135,22 @@ const Engine = (function () {
   function num(n) { return Math.round(n * 10) / 10; }
   function pts(n) { return num(n) + ' pts'; }
   let H = [];
-  function act(fn) { H.push(fn); return H.length - 1; }
+  function act(fn) {
+    const ref = roR;  // un gestionnaire créé dans le volet « référence » agit sur la liste de référence
+    H.push(ref ? function () { const p = roR; roR = ref; try { return fn.apply(this, arguments); } finally { roR = p; } } : fn);
+    return H.length - 1;
+  }
   function btn(cls, label, fn, extra) { return '<button type="button" class="' + cls + '" data-h="' + act(fn) + '"' + (extra || '') + '>' + label + '<\/button>'; }
   function tmpValue(def, parent, count) {
     return Engine.value({ n: def, c: count || 1, k: [], p: parent }, 'pts');
   }
-  const unitFromCache = {};
+  const unitFromCache = new Map();
   function fromPts(def) {
-    if (unitFromCache[def.id] === undefined) {
+    if (!unitFromCache.has(def)) {
       const f = { n: { type: 'force', id: 'force' }, c: 1, k: [], p: { n: { type: 'roster' }, c: 1, k: [], p: null } };
-      unitFromCache[def.id] = Engine.total(Engine.newUnit(def, f), 'pts');
+      unitFromCache.set(def, Engine.total(Engine.newUnit(def, f), 'pts'));
     }
-    return unitFromCache[def.id];
+    return unitFromCache.get(def);
   }
 
   /* ---------- éditeur d'options ---------- */
@@ -1302,7 +1379,8 @@ const Engine = (function () {
     const total = Engine.total(u, 'pts');
     const summary = Engine.describe(u).slice(0, 5).join(' · ');
     let chg = false;
-    if (ui.cmp && ui.cmp.live) { chg = true; for (const ff of ui.cmp.live.forces) for (const x of ff.units) if (unitSig(x) === unitSig(u)) chg = false; }
+    const cmpOther = ui.cmp && ui.cmp.live ? (roR ? lists[cur].live : ui.cmp.live) : null;
+    if (cmpOther) { chg = true; for (const ff of cmpOther.forces) for (const x of ff.units) if (unitSig(x) === unitSig(u)) chg = false; }
     let h = '<article class="unit' + (open ? ' open' : '') + (chg ? ' chg' : '') + '">';
     h += '<div class="uhw"><button type="button" class="uh" data-h="' + act(() => { ui.open[u.uid] = !open; }) + '" aria-expanded="' + open + '">' +
       '<span class="un"><span class="unm">' + esc(Engine.displayName(u)) + '<\/span><span class="uss">' + esc(summary) + '<\/span><\/span>' +
@@ -1355,22 +1433,24 @@ const Engine = (function () {
     }
     return h ? '<div class="fr">' + h + '<\/div>' : '';
   }
-  function forceCard(f) {
+  function forceCard(f) { return withF(f, () => forceCardIn(f)); }
+  function forceCardIn(f) {
     const slots = SLOT_ORDER.filter((s) => f.det.slots[s] || f.units.some((u) => u.n.slot === s));
     const dyn = currentDyn(f);
-    let h = '<div class="force"><div class="grp fblk"><div class="gh"><span>Détachement<\/span><\/div><div class="fh"><div><h2>' + esc(f.det.name) + '<\/h2><span class="fcp">' + (f.det.cp >= 0 ? '+' : '') + f.det.cp + ' CP<\/span><\/div><div class="fa">' +
+    let h = '<div class="force"><div class="grp fblk"><div class="gh"><span>Détachement<\/span><\/div><div class="fh"><div><h2>' + esc(f.det.name) + '<\/h2><span class="fcp">' + (f.det.cp >= 0 ? '+' : '') + f.det.cp + ' CP' + (f.fid && f.fid !== mainFid() ? ' · ' + esc(fname(f.fid)) : '') + '<\/span><\/div><div class="fa">' +
       btn('ghost sm', 'Changer', () => { ui.sheet = { type: 'det', f: f }; }) +
       btn('ghost bad sm', 'Retirer', () => {
         const r = R();
-        if (ui.confirm === 'f' + r.forces.indexOf(f)) { r.forces = r.forces.filter((x) => x !== f); r.node.k = r.forces; ui.confirm = null; }
-        else ui.confirm = 'f' + r.forces.indexOf(f);
+        const ck = (roR ? 'r' : 'f') + r.forces.indexOf(f);
+        if (ui.confirm === ck) { r.forces = r.forces.filter((x) => x !== f); r.node.k = r.forces; ui.confirm = null; }
+        else ui.confirm = ck;
       }) + '<\/div><\/div><\/div>';
-    if (ui.confirm === 'f' + R().forces.indexOf(f)) h = h.replace('>Retirer<', '>Confirmer ?<');
+    if (ui.confirm === (roR ? 'r' : 'f') + R().forces.indexOf(f)) h = h.replace('>Retirer<', '>Confirmer ?<');
     const fr = factionRules(f);
     const hasDyn = f.dyn && dynOptions(f).length > 1;
     if (hasDyn || fr) h += '<div class="grp fblk fac"><div class="gh"><span>' + esc(DYN_LABEL || 'Faction') + ' et règles de faction<\/span><\/div>';
     if (hasDyn) {
-      h += '<label class="dyn" for="dyn' + R().forces.indexOf(f) + '"><span>' + esc(DYN_LABEL) + '<\/span><select id="dyn' + R().forces.indexOf(f) + '" data-hi="' + act((v) => { setDyn(f, v); sync(f); }) + '">' +
+      h += '<label class="dyn" for="dyn' + (roR ? 'r' : '') + R().forces.indexOf(f) + '"><span>' + esc(DYN_LABEL) + '<\/span><select id="dyn' + (roR ? 'r' : '') + R().forces.indexOf(f) + '" data-hi="' + act((v) => { withF(f, () => { setDyn(f, v); sync(f); }); }) + '">' +
         dynOptions(f).map((o) => '<option value="' + esc(o.name) + '"' + (o.name === dyn ? ' selected' : '') + '>' + esc(dynClean(o.name)) + '<\/option>').join('') +
         '<\/select><\/label>';
     }
@@ -1384,26 +1464,14 @@ const Engine = (function () {
   function unitSig(u) { return Engine.displayName(u) + '|' + num(Engine.total(u, 'pts')); }
   function paneHtml(r, other, kind) {
     const tp = Engine.totalPoints(r);
-    const otherSigs = {};
-    for (const f of other.forces) for (const u of f.units) otherSigs[unitSig(u)] = (otherSigs[unitSig(u)] || 0) + 1;
-    let h = '<div class="pane ' + kind + '"><div class="pt"><span class="tag">' + (kind === 'ref' ? 'Référence' : 'En cours') + '<\/span><b class="pn2">' + esc(r.name) + '<\/b>' +
+    const head = '<div class="pt">' + btn('ptog' + (ui.cmp && ui.cmp.edit ? ' on' : ''), ui.cmp && ui.cmp.edit ? '✓ Modifiable' : '✎ Modifier', () => { ui.cmp.edit = !ui.cmp.edit; save(); }, ' aria-pressed="' + !!(ui.cmp && ui.cmp.edit) + '" aria-label="Activer ou désactiver la modification de la liste de référence"') + '<span class="tag">Référence<\/span><b class="pn2">' + esc(r.name) + '<\/b>' +
       '<span class="pp">' + num(tp) + ' / ' + r.limit + ' pts · ' + Engine.totalCP(r) + ' CP<\/span><\/div>';
+    const ed = !!(ui.cmp && ui.cmp.edit);
+    let h = '<div class="pane ref edit' + (ed ? ' refed' : ' ro') + '">' + head;
     if (!r.forces.length) h += '<p class="note">Aucun détachement.<\/p>';
-    for (const f of r.forces) {
-      const d = currentDyn(f);
-      h += '<div class="pf"><h4>' + esc(f.det.name) + '<\/h4>' + (d ? '<div class="pdy">' + esc(DYN_LABEL) + ' ' + esc(dynClean(d)) + '<\/div>' : '');
-      for (const slot of SLOT_ORDER) {
-        const us = f.units.filter((u) => u.n.slot === slot);
-        if (!us.length) continue;
-        h += '<div class="psl">' + SLOT_FR[slot] + '<\/div>';
-        for (const u of us) {
-          const diff = !otherSigs[unitSig(u)];
-          h += '<button type="button" class="cu' + (diff ? ' chg' : '') + '" aria-label="Voir le profil de ' + esc(Engine.displayName(u)) + '" data-h="' + act(() => { ui.sheet = { type: 'profile', u: u }; }) + '"><span class="cl"><b>' + esc(Engine.displayName(u)) + '<\/b><span class="cpv">' + num(Engine.total(u, 'pts')) + '<\/span><\/span>' +
-            '<span class="cs">' + esc(Engine.describe(u).join(' · ')) + '<\/span><\/button>';
-        }
-      }
-      h += '<\/div>';
-    }
+    roR = r;
+    try { for (const f of r.forces) h += forceCard(f); } finally { roR = null; }
+    activate(mainFid());
     return h + '<\/div>';
   }
   function compareHtml() {
@@ -1412,7 +1480,7 @@ const Engine = (function () {
     const nu = (r) => r.forces.reduce((a, f) => a + f.units.length, 0);
     const du = nu(cur) - nu(ref);
     return '<div class="cmpbar"><span>Écart avec la référence : <b class="' + (dp > 0 ? 'up' : dp < 0 ? 'dn' : '') + '">' + (dp > 0 ? '+' : '') + num(dp) + ' pts<\/b>' +
-      ' · <b>' + (du > 0 ? '+' : '') + du + '<\/b> unité' + (Math.abs(du) > 1 ? 's' : '') + '<\/span>' + btn('ghost sm', 'Quitter', () => { ui.cmp = null; }) + '<\/div>' +
+      ' · <b>' + (du > 0 ? '+' : '') + du + '<\/b> unité' + (Math.abs(du) > 1 ? 's' : '') + '<\/span>' + btn('ghost sm', 'Quitter', () => { ui.cmp.edit = false; ui.cmp = null; }) + '<\/div>' +
       '<div class="cmp">' + paneHtml(ref, cur, 'ref') +
       '<div class="pane cur edit"><div class="pt"><span class="tag">En cours · modifiable<\/span><\/div>' + listTab() + '<\/div><\/div>' +
       '<p class="note cn">Les unités marquées d\'une barre sont celles qui n\'ont pas d\'équivalent identique (même nom, mêmes points) dans l\'autre liste.<\/p>';
@@ -1432,13 +1500,33 @@ const Engine = (function () {
     h += btn('addf', '+ Ajouter un détachement', () => { ui.sheet = { type: 'det' }; });
     return h;
   }
+  /* alliances : en jeu équilibré (match joué), toutes les unités de l'armée doivent partager au moins un mot-clé de faction
+     (Imperium, Chaos, Aeldari… ; les unités sans faction vont avec tout le monde). On compare les grandes familles de factions. */
+  function family(fid) {
+    const e = factionEntry(fid);
+    if (!e || e.group === 'Unaligned') return null;
+    if (e.group === 'Imperium' || e.group === 'Chaos' || e.group === 'Aeldari') return e.group;
+    return /^tyranids/.test(fid) ? 'Tyranids' : fid;  // Tyranids et Cultes genestealers : regroupés par prudence
+  }
+  const FAM_FR = { necrons: 'Necrons', orks: 'Orks', 't-au-empire': "T'au Empire", Tyranids: 'Tyranids' };
+  function famName(k) { return FAM_FR[k] || k; }
+  function allianceIssues(r) {
+    const fams = [];
+    for (const f of r.forces) {
+      const k = family(f.fid || mainFid());
+      if (k && fams.indexOf(k) < 0) fams.push(k);
+    }
+    if (fams.length < 2) return [];
+    return ['Armée mélangée sans mot-clé de faction commun : ' + fams.map(famName).join(' + ') + '. En match joué, toutes les unités doivent partager au moins un mot-clé de faction (Imperium, Chaos, Aeldari…).'];
+  }
+  function alertsOf(r) { return Engine.validate(r, r.limit).concat(allianceIssues(r)); }
   function checkBody() {
     const r = R();
-    const w = Engine.validate(r, r.limit);
+    const w = alertsOf(r);
     let h = '';
     if (!w.length) h += '<p class="okmsg">Aucun problème détecté. La liste respecte les règles de composition connues par l\'appli.<\/p>';
     else h += '<ul class="warn">' + w.map((x) => '<li>' + esc(x) + '<\/li>').join('') + '<\/ul>';
-    h += '<p class="note">Le contrôle couvre les emplacements du détachement, les tailles d\'unités, les choix d\'équipement, le Seigneur de guerre et la limite de points. Les règles propres à une campagne ou à un scénario ne sont pas vérifiées.<\/p>';
+    h += '<p class="note">Le contrôle couvre les emplacements du détachement, les tailles d\'unités, les choix d\'équipement, le Seigneur de guerre, la limite de points et la compatibilité des armées entre détachements (mot-clé de faction commun). Les règles propres à une campagne ou à un scénario ne sont pas vérifiées.<\/p>';
     return h;
   }
   function exportText() {
@@ -1448,8 +1536,9 @@ const Engine = (function () {
     L.push(FACTION.name.toUpperCase() + ' · ' + r.name);
     L.push(num(tp) + ' / ' + r.limit + ' pts · ' + Engine.totalCP(r) + ' CP');
     for (const f of r.forces) {
+      activate(f.fid || mainFid());
       L.push('');
-      L.push('== ' + f.det.name + ' (' + (f.det.cp >= 0 ? '+' : '') + f.det.cp + ' CP)' + (currentDyn(f) ? ' · ' + DYN_LABEL + ' ' + dynClean(currentDyn(f)) : '') + ' ==');
+      L.push('== ' + f.det.name + (f.fid && f.fid !== mainFid() ? ' [' + fname(f.fid) + ']' : '') + ' (' + (f.det.cp >= 0 ? '+' : '') + f.det.cp + ' CP)' + (currentDyn(f) ? ' · ' + DYN_LABEL + ' ' + dynClean(currentDyn(f)) : '') + ' ==');
       for (const s of SLOT_ORDER) {
         const us = f.units.filter((u) => u.n.slot === s);
         if (!us.length) continue;
@@ -1496,13 +1585,38 @@ const Engine = (function () {
   }
 
   /* ---------- feuilles (tiroirs) ---------- */
+  function pickArmy(fid) {
+    const s = ui.sheet;
+    if (!s || s.type !== 'det') return;
+    s.err = null;
+    if (CTX[fid]) { s.fid = fid; return; }
+    s.loading = fid;
+    getFactionText(fid).then((t) => {
+      mkCtx(fid, t);
+      if (ui.sheet === s) { s.fid = fid; s.loading = null; }
+      render();
+    }).catch((err) => {
+      if (ui.sheet === s) { s.loading = null; s.err = 'Impossible de charger ' + fname(fid) + ' (' + (err && err.message ? err.message : err) + ').'; s.fid = mainFid(); }
+      render();
+    });
+  }
   function sheetHtml() {
     const s = ui.sheet;
     if (!s) return '';
     let body = '', title = '';
     if (s.type === 'det') {
       title = s.f ? 'Changer de détachement' : 'Choisir un détachement';
-      body = (s.f ? '<p class="note">Les unités restent en place. Chaque détachement indique si la liste actuelle y est conforme.<\/p>' : '') + '<ul class="pick">' + DETS.map((d) => {
+      const sfid = s.f ? s.f.fid : (s.fid || mainFid());
+      const cx = CTX[sfid] || CTX[mainFid()];
+      let army = '';
+      if (!s.f) {  // nouveau détachement : même armée par défaut, liste déroulante pour en choisir une autre
+        const groups = {};
+        for (const x of INDEX.factions) (groups[x.group || 'Autres'] = groups[x.group || 'Autres'] || []).push(x);
+        army = '<label class="dyn"><span>Armée du détachement<\/span><select id="darmy" data-hi="' + act((v) => { pickArmy(v); }) + '">' +
+          Object.keys(groups).map((g) => '<optgroup label="' + esc(g) + '">' + groups[g].map((x) => '<option value="' + esc(x.id) + '"' + (x.id === sfid ? ' selected' : '') + '>' + esc(x.name) + (x.id === mainFid() ? ' (armée de la liste)' : '') + '<\/option>').join('') + '<\/optgroup>').join('') +
+          '<\/select><\/label>' + (s.loading ? '<p class="note">Chargement de ' + esc(fname(s.loading)) + '…<\/p>' : '') + (s.err ? '<p class="warn1">' + esc(s.err) + '<\/p>' : '');
+      }
+      body = army + (s.f ? '<p class="note">Les unités restent en place. Chaque détachement indique si la liste actuelle y est conforme.<\/p>' : '') + '<ul class="pick">' + cx.DETS.map((d) => {
         const desc = SLOT_ORDER.filter((k) => d.slots[k] && k !== 'Dedicated Transport').map((k) => {
           const m = d.slots[k];
           return SLOT_FR[k] + ' ' + (m[1] === null ? m[0] + '+' : (m[0] === m[1] ? m[0] : m[0] + '–' + m[1]));
@@ -1515,10 +1629,11 @@ const Engine = (function () {
               : '<span class="pd ok">Les unités actuelles respectent ce détachement<\/span>');
         }
         return '<li>' + btn('pickrow', '<span class="pn">' + esc(d.name) + '<em>' + (d.cp >= 0 ? '+' : '') + d.cp + ' CP<\/em><\/span><span class="pd">' + esc(desc || 'Aucune limite') + '<\/span>' + status,
-          () => { if (s.f) s.f.det = d; else addForce(R(), d); ui.sheet = null; }) + '<\/li>';
+          () => { if (s.f) s.f.det = d; else addForce(R(), d, sfid); ui.sheet = null; }) + '<\/li>';
       }).join('') + '<\/ul>';
     } else if (s.type === 'add') {
       title = 'Ajouter une unité';
+      activate(s.f.fid || mainFid());
       const slots = SLOT_ORDER.filter((k) => DATA.units.some((u) => u.slot === k));
       body = '<div class="chips" role="tablist">' + btn('chip' + (ui.chip === 'all' ? ' on' : ''), 'Toutes', () => { ui.chip = 'all'; }) +
         slots.map((k) => btn('chip' + (ui.chip === k ? ' on' : ''), SLOT_FR[k], () => { ui.chip = k; })).join('') + '<\/div>' +
@@ -1534,7 +1649,7 @@ const Engine = (function () {
         (cands.length ? '<ul class="pick">' + cands.map((x) => {
           const inf = entryInfo(x.e);
           const ok = x.e.fid === FACTION.id;
-          return '<li>' + (ok ? btn('pickrow', '<span class="pn">' + esc(inf.name) + '<em>' + num(inf.pts) + ' / ' + inf.limit + ' pts<\/em><\/span>', () => { ensureLive(x.e); ui.cmp = x.e; ui.open = {}; ui.sheet = null; ui.tab = 'list'; })
+          return '<li>' + (ok ? btn('pickrow', '<span class="pn">' + esc(inf.name) + '<em>' + num(inf.pts) + ' / ' + inf.limit + ' pts<\/em><\/span>', () => { loadFor(x.e).then(() => { ensureLive(x.e); activate(mainFid()); x.e.edit = false; ui.cmp = x.e; ui.open = {}; ui.sheet = null; ui.tab = 'list'; render(); }); })
             : '<div class="pickrow dis"><span class="pn">' + esc(inf.name) + '<em>' + esc(fname(x.e.fid)) + '<\/em><\/span><span class="pd">autre faction<\/span><\/div>') + '<\/li>';
         }).join('') + '<\/ul>' : '<p class="note">Aucune autre liste enregistrée. Créez ou importez d\'abord une deuxième liste.<\/p>');
     } else if (s.type === 'profile') {
@@ -1550,6 +1665,7 @@ const Engine = (function () {
       title = 'Mes listes';
       body = listsBody(false);
     }
+    if (mainFid()) activate(mainFid());
     return '<div class="scrim" data-h="' + act(() => { ui.sheet = null; ui.confirm = null; }) + '"><\/div>' +
       '<div class="sheet' + (s.type === 'check' ? ' top' : '') + '" role="dialog" aria-modal="true" aria-label="' + esc(title) + '"><div class="shh"><h2>' + esc(title) + '<\/h2>' +
       btn('ghost sm', 'Fermer', () => { ui.sheet = null; ui.confirm = null; }) + '<\/div><div class="shb">' + body + '<\/div><\/div>';
@@ -1610,8 +1726,10 @@ const Engine = (function () {
     H = H.slice(0, ui.keep);
     el.innerHTML = pickerResults();
   }
-  function resultsHtml() {
+  function resultsHtml() { try { return resultsIn(); } finally { if (mainFid()) activate(mainFid()); } }
+  function resultsIn() {
     const s = ui.sheet;
+    activate(s.f.fid || mainFid());
     const q = ui.search.trim().toLowerCase();
     const list = DATA.units.filter((u) => (ui.chip === 'all' || u.slot === ui.chip) && (!q || u.name.toLowerCase().indexOf(q) >= 0));
     if (!list.length) return '<p class="note">Aucune unité ne correspond.<\/p>';
@@ -1636,10 +1754,10 @@ const Engine = (function () {
     const tp = Engine.totalPoints(r);
     const pct = r.limit > 0 ? Math.min(100, (tp / r.limit) * 100) : 0;
     const over = r.limit > 0 && tp > r.limit;
-    const nw = Engine.validate(r, r.limit).length;
+    const nw = alertsOf(r).length;
     return '<header class="top"><div class="hrow">' +
       btn('cmpb' + (ui.cmp ? ' on' : ''), '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M12 4v16"/><\/svg>',
-        () => { if (ui.cmp) ui.cmp = null; else ui.sheet = { type: 'cmp' }; }, ' aria-label="' + (ui.cmp ? 'Quitter la comparaison' : 'Comparer avec une autre liste') + '" aria-pressed="' + (!!ui.cmp) + '"') +
+        () => { if (ui.cmp) { ui.cmp.edit = false; ui.cmp = null; } else ui.sheet = { type: 'cmp' }; }, ' aria-label="' + (ui.cmp ? 'Quitter la comparaison' : 'Comparer avec une autre liste') + '" aria-pressed="' + (!!ui.cmp) + '"') +
       btn('lname', '<span class="brand">' + esc(FACTION ? FACTION.name : '') + '<\/span><span class="ln">' + esc(r.name) + '<\/span>', () => { ui.tab = 'lists'; }, ' aria-label="Mes listes"') +
       '<div class="tot' + (over ? ' over' : '') + '"><b>' + num(tp) + '<\/b><span>/ ' + (r.limit > 0 ? r.limit : '—') + ' pts<\/span><\/div><\/div>' +
       '<div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="' + r.limit + '" aria-valuenow="' + num(tp) + '"><i style="width:' + pct + '%"><\/i><\/div>' +
@@ -1671,6 +1789,7 @@ const Engine = (function () {
     H = [];
     let html;
     const e = lists[cur];
+    if (e && FACTION && FACTION.id !== e.fid && CTX[e.fid]) activate(e.fid);
     if (ui.cmp && (!lists.includes(ui.cmp) || ui.cmp === e || !FACTION || ui.cmp.fid !== FACTION.id || !ui.cmp.live)) ui.cmp = null;
     if (ui.busy || ui.err || !e || !e.live || !FACTION || FACTION.id !== e.fid) {
       html = plainScreen() + (ui.sheet && (ui.sheet.type === 'lists' || ui.sheet.type === 'import') ? sheetHtml() : '');
@@ -1685,6 +1804,7 @@ const Engine = (function () {
     }
     ui.keep = H.length;
     document.getElementById('app').innerHTML = html;
+    try { document.getElementById('app').classList.toggle('wide', !!ui.cmp && ui.tab === 'list'); } catch (e) {}
     document.body.classList.toggle('lock', !!ui.sheet);
     window.scrollTo(0, y);
     save();
@@ -1723,6 +1843,9 @@ const Engine = (function () {
 
   render();
   load();
+  try {  // installation sur l'écran d'accueil + fonctionnement hors ligne (uniquement depuis un site, pas en ouvrant le fichier)
+    if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) navigator.serviceWorker.register('sw.js').catch(() => {});
+  } catch (e) { /* sans importance */ }
   loadIndex().then(loadOverrides).then(() => {
     ui.busy = null;
     if (lists.length) go(cur); else render();
@@ -1734,3 +1857,6 @@ const Engine = (function () {
 
 })();
 </script>
+
+</body>
+</html>
