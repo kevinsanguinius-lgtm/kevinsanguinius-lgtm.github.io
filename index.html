@@ -178,6 +178,9 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 .link { background: none; border: 0; color: var(--accent); text-align: left; padding: 10px 0 4px; font-size: 13px; font-weight: 600; min-height: 40px; }
 .refs h4 { font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin: 10px 0 4px; }
 .tw { overflow-x: auto; border: 1px solid var(--line); border-radius: 6px; }
+table.wt td, table.wt th { text-align: center; }
+table.wt td.tn, table.wt th:first-child { text-align: left; white-space: nowrap; }
+table.wt tbody tr:nth-child(odd) td { background: var(--raised); }
 table { border-collapse: collapse; width: 100%; font-size: 12px; font-family: var(--f-num); }
 th, td { padding: 5px 7px; text-align: center; white-space: nowrap; border-bottom: 1px solid var(--line); }
 th { color: var(--muted); font-weight: 500; background: var(--surface); }
@@ -1367,6 +1370,20 @@ const Engine = (function () {
     }
     return h + '<\/tbody><\/table><\/div>';
   }
+  /* table de dégâts : une ligne par palier, colonnes nommées d'après les caractéristiques du profil marquées « * » */
+  function woundTable(tracks, unitProf) {
+    const star = unitProf ? unitProf.chars.filter((c) => /\*/.test(c[1])).map((c) => c[0]) : [];
+    const first = tracks[0].chars;
+    const keys = first.map((c) => c[0]);
+    let ci = 0;
+    const heads = keys.slice(1).map((k) => (/^Characteristic\s*\d*$/i.test(k) ? (star[ci++] || 'Valeur') : k));
+    let h = '<div class="tw"><table class="wt"><thead><tr><th>Blessures restantes<\/th>' + heads.map((c) => '<th>' + esc(c) + '<\/th>').join('') + '<\/tr><\/thead><tbody>';
+    tracks.forEach((t, i) => {
+      const m = cmap(t);
+      h += '<tr><td class="tn">' + esc(m[keys[0]] === undefined ? t.name : m[keys[0]]) + '<\/td>' + keys.slice(1).map((k) => '<td>' + esc(m[k] === undefined ? '' : m[k]) + '<\/td>').join('') + '<\/tr>';
+    });
+    return h + '<\/tbody><\/table><\/div>';
+  }
   const SIGN = (v) => v;
   function cmap(p) { const m = {}; for (const ch of p.chars) m[ch[0]] = ch[1]; return m; }
   function wline(p) {  // ligne compacte d'une arme : portée, type, F, PA, D (seules les lettres S, AP, D en gras)
@@ -1430,6 +1447,7 @@ const Engine = (function () {
     const kinds = [];
     for (const o of p.other) { let k = kinds.find((x) => x.t === o.type); if (!k) kinds.push(k = { t: o.type, l: [] }); k.l.push(o); }
     for (const k of kinds) {
+      if (/wound\s*track/i.test(k.t) && k.l.length) { h += box('Table de dégâts', woundTable(k.l, p.units[0])); continue; }
       const title = /psychic|psyker|spell|discipline/i.test(k.t) ? 'Pouvoirs psychiques' : k.t;
       h += box(title, k.l.map((o) => '<p class="ab"><b>' + esc(o.name) + '<\/b> ' + o.chars.map((c) => esc(c[0]) + ' ' + val(c[1])).join(' · ') + '<\/p>').join(''));
     }
