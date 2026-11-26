@@ -504,13 +504,21 @@ const Engine = (function () {
           for (const kd of order) {
             if (need <= 0) break;
             const have = inst.k.find((x) => x.n === kd);
-            const hi = limits(kd, inst).max === undefined ? Infinity : limits(kd, inst).max * pcOf(inst);
+            const hi = bounds(kd, inst).hi;
             const room = hi - (have ? have.c : 0);
             if (room <= 0) continue;
             const n = Math.min(need, room);
             if (have) adjust(have, have.c + n); else addOption(inst, kd, n);
             need -= n;
           }
+        }
+        // 2b) sous-groupes sans défaut explicite : première option disponible
+        for (const sg of inst.k.filter((x) => isGroup(x) && !x.n.default)) {
+          if (need <= 0) break;
+          const L = limits(sg.n, inst), hi = L.max === undefined ? Infinity : L.max * pcOf(inst);
+          const room = hi - sum(sg.k.filter((x) => !isGroup(x)));
+          const dk = pickDefault(sg.n);
+          if (dk && room > 0 && !sg.k.some((x) => x.n === dk)) { const n = Math.min(need, room); addOption(sg, dk, n); need -= n; }
         }
         // 3) repli : l'ancien comportement (tout sur l'option par défaut)
         if (need > 0) {
